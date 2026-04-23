@@ -1,0 +1,4 @@
+{"doc_id":"D1","source":"proposal","text":"Ada-MSS uses a modular pipeline with retrieval, reasoning, and response generation modules."}
+{"doc_id":"D2","source":"proposal","text":"The system figure emphasizes cost-aware model routing and fallback strategy for reliability."}
+{"doc_id":"D3","source":"proposal","text":"Evaluation includes answer quality, latency, and API cost per request."}
+{"doc_id":"D4","source":"proposal","text":"Some long-term ideas such as continual learning and online adaptation are future work."}

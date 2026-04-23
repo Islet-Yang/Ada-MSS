@@ -1,0 +1,17 @@
+{
+  "project_name": "Ada-MSS",
+  "task_name": "proposal-aligned baseline",
+  "data": {
+    "input_path": "data/raw",
+    "cache_path": "data/cache"
+  },
+  "model": {
+    "encoder_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "hidden_size": 384
+  },
+  "train": {
+    "batch_size": 16,
+    "epochs": 5,
+    "learning_rate": 0.0001
+  }
+}

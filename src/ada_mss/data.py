@@ -13,6 +13,13 @@ class Document:
     source: str
 
 
+@dataclass
+class RepairTask:
+    task_id: str
+    buggy_code: str
+    tests: str
+
+
 class KnowledgeBase:
     def __init__(self, docs: list[Document]) -> None:
         self.docs = docs
@@ -32,6 +39,26 @@ class KnowledgeBase:
                 )
             )
         return cls(docs)
+
+
+class TaskDataset:
+    """Loader for bug-fix tasks: each JSONL row contains task_id, buggy_code, tests."""
+
+    @classmethod
+    def from_jsonl(cls, path: str | Path) -> list[RepairTask]:
+        tasks: list[RepairTask] = []
+        for line in Path(path).read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            item = json.loads(line)
+            tasks.append(
+                RepairTask(
+                    task_id=item["task_id"],
+                    buggy_code=item["buggy_code"],
+                    tests=item["tests"],
+                )
+            )
+        return tasks
 
 
 def tokenize(text: str) -> set[str]:

@@ -8,21 +8,18 @@ class ProviderConfig:
     name: str
     base_url: str
     model: str
-    api_key_env: str
-    input_cost_per_1k: float
-    output_cost_per_1k: float
+    api_key_env: str = ""
+    input_cost_per_1k: float = 0.0
+    output_cost_per_1k: float = 0.0
     enabled: bool = True
-
-
-@dataclass
-class RetrievalConfig:
-    top_k: int = 4
-    min_keyword_overlap: int = 1
+    deployment: str = "remote"  # remote | local
 
 
 @dataclass
 class PipelineConfig:
-    max_context_chars: int = 6000
+    initial_level: str = "TAC"
+    max_context_level: int = 2
+    max_repair_attempts: int = 3
     fallback_to_template: bool = True
 
 
@@ -30,7 +27,6 @@ class PipelineConfig:
 class AppConfig:
     project_name: str = "Ada-MSS"
     providers: list[ProviderConfig] = field(default_factory=list)
-    retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     pipeline: PipelineConfig = field(default_factory=PipelineConfig)
 
 
@@ -40,6 +36,5 @@ def load_config(path: str | Path) -> AppConfig:
     return AppConfig(
         project_name=payload.get("project_name", "Ada-MSS"),
         providers=providers,
-        retrieval=RetrievalConfig(**payload.get("retrieval", {})),
         pipeline=PipelineConfig(**payload.get("pipeline", {})),
     )

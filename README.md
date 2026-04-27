@@ -1,95 +1,46 @@
 # Ada-MSS
 
-> CS527 Team Project implementation scaffold, now filled according to the proposal + system figure (as far as can be landed in code).
+> Figure-aligned automatic program repair scaffold.
 
-## 中文说明（Chinese）
+## 中文（与 proposal/figure 对齐）
 
-### 这次补充了什么
-这版不再只是空壳，而是按 proposal/system figure 映射成可运行流程：
-1. **Query Intake**：接收用户问题。
-2. **Retrieval**：用关键字检索从知识库取 Top-K。
-3. **Context Assembly**：拼接上下文，限制长度。
-4. **Cost-aware LLM Routing**：在可用供应商里优先选便宜模型。
-5. **Answer Generation / Fallback**：生成答案；若无可用 API Key 则走模板兜底。
+当前主流程严格贴近你给的 system figure：
+1. Input: Buggy Code + Tests
+2. Semantic Pruning Engine（TAC/PSS/CDS）
+3. LLM Repair Agent（默认本地 Qwen）
+4. Validation Sandbox
+5. Pass Tests? -> Success；否则 Escalation Policy 提升粒度并重试
+6. 达到最大上下文级别后 Repair Fail
 
-### 目录结构
+默认本地模型：`Qwen/Qwen3-4B-Thinking-2507`（OpenAI-compatible endpoint）。
 
-```text
-Ada-MSS/
-├── proposal.pdf
-├── configs/
-│   └── default.json
-├── data/
-│   └── sample_kb.jsonl
-├── scripts/
-│   └── run_demo.py
-└── src/
-    └── ada_mss/
-        ├── __init__.py
-        ├── config.py
-        ├── data.py
-        ├── infer.py
-        ├── llm.py
-        ├── pipeline.py
-        ├── provider_router.py
-        ├── retrieval.py
-        └── train.py
-```
+### 快速运行
 
-### API 模型选择（按“便宜优先”）
-`configs/default.json` 里预置了 3 家（不多但够用）：
-- Groq（通常便宜、速度快）
-- DeepSeek
-- OpenRouter（可聚合更多模型）
-
-> 你可以直接在配置里改成本参数和启用状态；路由器会选**当前已配置 API Key 且总价最低**的供应商。
-
-### 目前明确不复现（proposal 里较难直接落地的部分）
-- 检索器 + 生成器联合训练（需要专门训练数据和 GPU 训练流程）。
-- 在线持续学习（需要稳定反馈闭环和线上基础设施）。
-
-### 运行
 ```bash
 PYTHONPATH=src python scripts/run_demo.py
 ```
 
-如果要启用真实 API，请先设置至少一个环境变量（示例）：
+### 本地模型服务示例（vLLM）
+
 ```bash
-export GROQ_API_KEY=xxx
-# 或 DEEPSEEK_API_KEY / OPENROUTER_API_KEY
+vllm serve Qwen/Qwen3-4B-Thinking-2507 --served-model-name Qwen/Qwen3-4B-Thinking-2507 --port 8000
 ```
+
+### 数据集建议与部署
+
+请看：`docs/DATASET_DEPLOYMENT.md`
 
 ---
 
 ## English
 
-### What is implemented now
-This version maps the proposal/system figure into a runnable flow:
-1. Query intake
-2. Top-K retrieval from a knowledge base
-3. Context assembly with length cap
-4. Cost-aware LLM provider routing
-5. Answer generation with template fallback when no provider is available
+This repo now follows the figure-aligned repair loop:
+- Buggy code + tests input
+- Semantic pruning (TAC/PSS/CDS)
+- LLM repair agent
+- Validation sandbox
+- Escalation policy until success or max context reached
 
-### API providers (cheap-first)
-`configs/default.json` includes three provider presets:
-- Groq
-- DeepSeek
-- OpenRouter
+Default local model: `Qwen/Qwen3-4B-Thinking-2507`.
 
-The router selects the **cheapest currently available provider** (enabled + API key present).
-
-### Explicitly not reproduced yet (hard-to-land proposal ideas)
-- End-to-end joint retriever-generator training
-- Continual online adaptation with feedback loops
-
-### Quick run
-```bash
-PYTHONPATH=src python scripts/run_demo.py
-```
-
-Set at least one key for real API calls:
-```bash
-export GROQ_API_KEY=xxx
-# or DEEPSEEK_API_KEY / OPENROUTER_API_KEY
-```
+Dataset recommendation and setup guide: `docs/DATASET_DEPLOYMENT.md`.

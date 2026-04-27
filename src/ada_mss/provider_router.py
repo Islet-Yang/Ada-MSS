@@ -6,16 +6,25 @@ from .config import ProviderConfig
 
 
 class CostAwareProviderRouter:
-    """Pick the cheapest enabled provider that has API key configured."""
+    """Prefer local deployment first, then cheapest remote provider."""
 
     def __init__(self, providers: list[ProviderConfig]) -> None:
         self.providers = providers
 
-    def pick(self) -> ProviderConfig:
-        candidates = [
-            p for p in self.providers if p.enabled and os.getenv(p.api_key_env)
-        ]
-        if not candidates:
-            raise RuntimeError("No available provider. Set at least one API key env var.")
+    def _is_available(self, p: ProviderConfig) -> bool:
+        if not p.enabled:
+            return False
+        if not p.api_key_env:
+            return True
+        return bool(os.getenv(p.api_key_env))
 
-        return min(candidates, key=lambda p: p.input_cost_per_1k + p.output_cost_per_1k)
+    def pick(self) -> ProviderConfig:
+        available = [p for p in self.providers if self._is_available(p)]
+        if not available:
+            raise RuntimeError("No available provider. Configure local server or API key.")
+
+        locals_first = [p for p in available if p.deployment == "local"]
+        if locals_first:
+            return locals_first[0]
+
+        return min(available, key=lambda p: p.input_cost_per_1k + p.output_cost_per_1k)

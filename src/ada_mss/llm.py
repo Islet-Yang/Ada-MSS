@@ -16,16 +16,21 @@ class LLMResponse:
 
 
 class OpenAICompatClient:
-    """OpenAI-compatible client via stdlib urllib to avoid hard dependency."""
+    """OpenAI-compatible client for both cloud APIs and local servers."""
 
     def __init__(self, config: ProviderConfig) -> None:
         self.config = config
 
-    def generate(self, prompt: str, system_prompt: str) -> LLMResponse:
-        key = os.getenv(self.config.api_key_env)
-        if not key:
-            raise RuntimeError(f"Missing env var: {self.config.api_key_env}")
+    def _build_headers(self) -> dict[str, str]:
+        headers = {"Content-Type": "application/json"}
+        if self.config.api_key_env:
+            key = os.getenv(self.config.api_key_env)
+            if not key:
+                raise RuntimeError(f"Missing env var: {self.config.api_key_env}")
+            headers["Authorization"] = f"Bearer {key}"
+        return headers
 
+    def generate(self, prompt: str, system_prompt: str) -> LLMResponse:
         payload = {
             "model": self.config.model,
             "messages": [
@@ -38,13 +43,10 @@ class OpenAICompatClient:
         req = request.Request(
             url=f"{self.config.base_url}/chat/completions",
             data=data,
-            headers={
-                "Authorization": f"Bearer {key}",
-                "Content-Type": "application/json",
-            },
+            headers=self._build_headers(),
             method="POST",
         )
-        with request.urlopen(req, timeout=45) as resp:
+        with request.urlopen(req, timeout=60) as resp:
             body = json.loads(resp.read().decode("utf-8"))
 
         content = body["choices"][0]["message"]["content"]

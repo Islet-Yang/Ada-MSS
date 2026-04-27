@@ -1,0 +1,31 @@
+{
+  "project_name": "Ada-MSS",
+  "providers": [
+    {
+      "name": "local_qwen",
+      "deployment": "local",
+      "base_url": "http://127.0.0.1:8000/v1",
+      "model": "Qwen/Qwen3-4B-Thinking-2507",
+      "api_key_env": "",
+      "input_cost_per_1k": 0.0,
+      "output_cost_per_1k": 0.0,
+      "enabled": true
+    },
+    {
+      "name": "deepseek",
+      "deployment": "remote",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat",
+      "api_key_env": "DEEPSEEK_API_KEY",
+      "input_cost_per_1k": 0.00014,
+      "output_cost_per_1k": 0.00028,
+      "enabled": false
+    }
+  ],
+  "pipeline": {
+    "initial_level": "TAC",
+    "max_context_level": 2,
+    "max_repair_attempts": 3,
+    "fallback_to_template": true
+  }
+}

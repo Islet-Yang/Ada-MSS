@@ -15,6 +15,8 @@ class EvalItem:
     final_level: str
     provider: str
     model: str
+    trace: list[str]
+    candidate_patch: str
 
 
 @dataclass
@@ -45,6 +47,8 @@ def run_benchmark(config_path: str, dataset_path: str, max_samples: int | None =
                 final_level=result.final_level,
                 provider=result.provider,
                 model=result.model,
+                trace=result.trace,
+                candidate_patch=result.candidate_patch,
             )
         )
 

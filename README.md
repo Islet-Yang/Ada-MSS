@@ -33,8 +33,8 @@ vllm serve Qwen/Qwen3-4B-AWQ \
   --served-model-name qwen3-4b-awq \
   --host 127.0.0.1 \
   --port 8001 \
-  --max-model-len 1024 \
-  --gpu-memory-utilization 0.55 \
+  --max-model-len 2048 \
+  --gpu-memory-utilization 0.60 \
   --max-num-seqs 1 \
   --enforce-eager
 

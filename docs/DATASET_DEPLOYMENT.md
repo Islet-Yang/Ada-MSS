@@ -93,6 +93,15 @@ mkdir -p logs
 ADA_MSS_LLM_LOG=logs/llm_debug.jsonl PYTHONPATH=src python scripts/run_benchmark.py --config configs/local_awq.json
 
 
+mkdir -p logs
+ADA_MSS_LLM_LOG=logs/llm_debug_onecase.jsonl \
+PYTHONPATH=src python scripts/run_benchmark.py \
+  --config configs/local_awq.json \
+  --test-samples 1 \
+  --verbose \
+  --patch-preview-lines 0 \
+  --verbose-log-file logs/benchmark_onecase_verbose.txt
+
 ---
 
 ## Notes

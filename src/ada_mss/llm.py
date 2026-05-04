@@ -45,7 +45,11 @@ class OpenAICompatClient:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt},
             ],
-            "temperature": 0.2,
+            "temperature": 0.0,
+            "max_tokens": 512,
+            "chat_template_kwargs": {
+                "enable_thinking": False
+            }
         }
         data = json.dumps(payload).encode("utf-8")
         url = f"{self.config.base_url}/chat/completions"

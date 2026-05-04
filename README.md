@@ -29,6 +29,15 @@ PYTHONPATH=src python scripts/run_benchmark.py
 vllm serve Qwen/Qwen3-4B-Thinking-2507 --served-model-name Qwen/Qwen3-4B-Thinking-2507 --port 8000
 ```
 
+vllm serve Qwen/Qwen3-4B-AWQ \
+  --served-model-name qwen3-4b-awq \
+  --host 127.0.0.1 \
+  --port 8001 \
+  --max-model-len 1024 \
+  --gpu-memory-utilization 0.55 \
+  --max-num-seqs 1 \
+  --enforce-eager
+
 ### 部署数据集并跑测试
 
 详见：`docs/DATASET_DEPLOYMENT.md`

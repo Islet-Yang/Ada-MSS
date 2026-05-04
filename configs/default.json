@@ -5,7 +5,7 @@
       "name": "local_qwen",
       "deployment": "local",
       "base_url": "http://127.0.0.1:8000/v1",
-      "model": "Qwen/Qwen3-4B-Thinking-2507",
+      "model": "/models/models/islet/model_para/hub/models--Qwen--Qwen3-4B-Thinking-2507/snapshots/768f209d9ea81521153ed38c47d515654e938aea",
       "api_key_env": "",
       "input_cost_per_1k": 0.0,
       "output_cost_per_1k": 0.0,

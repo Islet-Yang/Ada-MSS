@@ -13,6 +13,16 @@ from .validator import ValidationSandbox
 
 
 @dataclass
+class AttemptLog:
+    attempt: int
+    level: str
+    candidate_patch: str
+    validation_passed: bool
+    validation_error_type: str
+    validation_output: str
+
+
+@dataclass
 class PipelineResult:
     status: str
     provider: str
@@ -21,6 +31,7 @@ class PipelineResult:
     attempts: int
     trace: list[str]
     candidate_patch: str
+    attempt_logs: list[AttemptLog]
 
 
 class AdaMSSPipeline:
@@ -51,6 +62,7 @@ class AdaMSSPipeline:
 
     def run(self, task: RepairTask) -> PipelineResult:
         trace: list[str] = []
+        attempt_logs: list[AttemptLog] = []
         level = self.cfg.pipeline.initial_level
         attempts = 0
         candidate_code = task.buggy_code
@@ -85,6 +97,16 @@ class AdaMSSPipeline:
 
             trace.append("validation_sandbox")
             val = self.validator.run(task, candidate_code)
+            attempt_logs.append(
+                AttemptLog(
+                    attempt=attempts,
+                    level=level,
+                    candidate_patch=candidate_code,
+                    validation_passed=val.passed,
+                    validation_error_type=val.error_type,
+                    validation_output=val.output,
+                )
+            )
 
             if val.passed:
                 trace.append("repair_success")
@@ -96,6 +118,7 @@ class AdaMSSPipeline:
                     attempts=attempts,
                     trace=trace,
                     candidate_patch=candidate_code,
+                    attempt_logs=attempt_logs,
                 )
 
             trace.append(f"repair_failed:{val.error_type}")
@@ -110,6 +133,7 @@ class AdaMSSPipeline:
                     attempts=attempts,
                     trace=trace,
                     candidate_patch=candidate_code,
+                    attempt_logs=attempt_logs,
                 )
             level = nxt
             trace.append(f"escalate_to:{level}")
@@ -123,4 +147,5 @@ class AdaMSSPipeline:
             attempts=attempts,
             trace=trace,
             candidate_patch=candidate_code,
+            attempt_logs=attempt_logs,
         )

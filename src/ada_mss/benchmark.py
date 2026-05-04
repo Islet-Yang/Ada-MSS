@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from .config import load_config
 from .data import TaskDataset
-from .pipeline import AdaMSSPipeline
+from .pipeline import AdaMSSPipeline, AttemptLog
 
 
 @dataclass
@@ -17,6 +17,7 @@ class EvalItem:
     model: str
     trace: list[str]
     candidate_patch: str
+    attempt_logs: list[AttemptLog]
 
 
 @dataclass
@@ -49,6 +50,7 @@ def run_benchmark(config_path: str, dataset_path: str, max_samples: int | None =
                 model=result.model,
                 trace=result.trace,
                 candidate_patch=result.candidate_patch,
+                attempt_logs=result.attempt_logs,
             )
         )
 

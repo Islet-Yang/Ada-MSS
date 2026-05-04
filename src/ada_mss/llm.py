@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import json
 import os
-from urllib import request
+from urllib import error, request
 
 from .config import ProviderConfig
 
@@ -30,6 +31,13 @@ class OpenAICompatClient:
             headers["Authorization"] = f"Bearer {key}"
         return headers
 
+    def _append_debug_log(self, record: dict) -> None:
+        log_path = os.getenv("ADA_MSS_LLM_LOG")
+        if not log_path:
+            return
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
     def generate(self, prompt: str, system_prompt: str) -> LLMResponse:
         payload = {
             "model": self.config.model,
@@ -40,14 +48,42 @@ class OpenAICompatClient:
             "temperature": 0.2,
         }
         data = json.dumps(payload).encode("utf-8")
+        url = f"{self.config.base_url}/chat/completions"
         req = request.Request(
-            url=f"{self.config.base_url}/chat/completions",
+            url=url,
             data=data,
             headers=self._build_headers(),
             method="POST",
         )
-        with request.urlopen(req, timeout=60) as resp:
-            body = json.loads(resp.read().decode("utf-8"))
+
+        started_at = datetime.now(timezone.utc).isoformat()
+        try:
+            with request.urlopen(req, timeout=60) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+        except error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="replace")
+            self._append_debug_log(
+                {
+                    "time": started_at,
+                    "provider": self.config.name,
+                    "model": self.config.model,
+                    "url": url,
+                    "request": payload,
+                    "http_status": e.code,
+                    "error_response": err_body,
+                }
+            )
+            raise
 
         content = body["choices"][0]["message"]["content"]
+        self._append_debug_log(
+            {
+                "time": started_at,
+                "provider": self.config.name,
+                "model": self.config.model,
+                "url": url,
+                "request": payload,
+                "response": body,
+            }
+        )
         return LLMResponse(provider=self.config.name, model=self.config.model, content=content)

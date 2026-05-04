@@ -41,12 +41,26 @@ mkdir -p data/raw data/processed
 ### 2) 下载数据（示例）
 
 ```bash
+mkdir -p data/raw data/processed
+
+export HF_DATASETS_CACHE="$PWD/data/raw/hf_cache"
+
 python - <<'PY'
 from datasets import load_dataset
 
-ds = load_dataset("princeton-nlp/SWE-bench_Lite", split="test")
+ds = load_dataset(
+    "princeton-nlp/SWE-bench_Lite",
+    split="test",
+    cache_dir="data/raw/hf_cache",
+)
+
 print("rows:", len(ds))
-print(ds[0].keys())
+print("columns:", ds.column_names)
+print(ds[0])
+
+# 额外导出一份 jsonl，方便后面自己处理
+ds.to_json("data/raw/swebench_lite_test.jsonl", orient="records", lines=True)
+print("saved to data/raw/swebench_lite_test.jsonl")
 PY
 ```
 
@@ -56,9 +70,12 @@ PY
 
 ```bash
 python scripts/prepare_dataset.py \
-  --input data/raw/your_source.jsonl \
+  --input data/raw/debugbench.jsonl \
   --output data/processed/repair_tasks.jsonl
 ```
+python scripts/prepare_dataset.py \
+  --input data/processed/debugbench.jsonl \
+  --output data/processed/repair_tasks.jsonl
 
 ### 4) 运行批量评测
 
@@ -66,10 +83,15 @@ python scripts/prepare_dataset.py \
 PYTHONPATH=src python - <<'PY'
 from ada_mss.benchmark import run_benchmark
 
-summary = run_benchmark("configs/default.json", "data/processed/repair_tasks.jsonl")
+summary = run_benchmark("configs/local_awq.json", "data/processed/repair_tasks_demo.jsonl")
 print(summary)
 PY
 ```
+
+
+mkdir -p logs
+ADA_MSS_LLM_LOG=logs/llm_debug.jsonl PYTHONPATH=src python scripts/run_benchmark.py --config configs/local_awq.json
+
 
 ---
 

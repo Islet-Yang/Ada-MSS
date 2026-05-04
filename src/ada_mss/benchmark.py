@@ -13,6 +13,8 @@ class EvalItem:
     status: str
     attempts: int
     final_level: str
+    provider: str
+    model: str
 
 
 @dataclass
@@ -23,10 +25,10 @@ class EvalSummary:
     items: list[EvalItem]
 
 
-def run_benchmark(config_path: str, dataset_path: str) -> EvalSummary:
+def run_benchmark(config_path: str, dataset_path: str, max_samples: int | None = None) -> EvalSummary:
     cfg = load_config(config_path)
     pipeline = AdaMSSPipeline(cfg)
-    tasks = TaskDataset.from_jsonl(dataset_path)
+    tasks = TaskDataset.from_path(dataset_path, max_samples=max_samples)
 
     items: list[EvalItem] = []
     success = 0
@@ -41,6 +43,8 @@ def run_benchmark(config_path: str, dataset_path: str) -> EvalSummary:
                 status=result.status,
                 attempts=result.attempts,
                 final_level=result.final_level,
+                provider=result.provider,
+                model=result.model,
             )
         )
 

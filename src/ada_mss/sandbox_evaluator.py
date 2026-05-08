@@ -3,6 +3,12 @@ import traceback
 import sys
 import io
 import ast
+import collections
+import inspect
+import json
+import re
+from collections import Counter, defaultdict, deque
+from typing import Dict, List, Optional, Set, Tuple
 
 # 数据结构定义
 class ListNode:
@@ -81,24 +87,155 @@ def parse_inputs(raw_inputs: list) -> list:
     parsed = []
     for inp in raw_inputs:
         if isinstance(inp, str):
-            parsed.append(ast.literal_eval(inp))
+            parsed.append(normalize_literal(inp))
         else:
             parsed.append(inp)
     return parsed
+
+def normalize_literal(value: str):
+    """Parse LeetCode-style literals, including true/false/null."""
+    text = value.strip()
+    text = re.sub(r"\btrue\b", "True", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bfalse\b", "False", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bnull\b", "None", text, flags=re.IGNORECASE)
+    try:
+        return ast.literal_eval(text)
+    except Exception:
+        try:
+            return json.loads(value)
+        except Exception:
+            return value.strip().strip('"')
+
+def split_top_level_commas(text: str) -> list[str]:
+    parts: list[str] = []
+    depth = 0
+    in_string = False
+    quote = ""
+    current: list[str] = []
+    for ch in text:
+        if ch in {'"', "'"} and (not current or current[-1] != "\\"):
+            if not in_string:
+                in_string = True
+                quote = ch
+            elif quote == ch:
+                in_string = False
+                quote = ""
+        elif not in_string:
+            if ch in "([{":
+                depth += 1
+            elif ch in ")]}":
+                depth = max(depth - 1, 0)
+        if ch == "," and depth == 0 and not in_string:
+            parts.append("".join(current).strip())
+            current = []
+        else:
+            current.append(ch)
+    if current:
+        parts.append("".join(current).strip())
+    return parts
+
+def parse_example_block(block: str) -> tuple[list, object] | None:
+    if "Input:" not in block or "Output:" not in block:
+        return None
+    input_part, output_part = block.split("Output:", 1)
+    input_part = input_part.split("Input:", 1)[1].strip()
+    output_line = output_part.strip().splitlines()[0].strip()
+    if not input_part or not output_line:
+        return None
+
+    args = []
+    for line in input_part.splitlines():
+        line = line.strip().lstrip("#").strip()
+        if not line:
+            continue
+        for part in split_top_level_commas(line):
+            if not part:
+                continue
+            if "=" in part:
+                _, value = part.split("=", 1)
+                args.append(normalize_literal(value))
+            else:
+                args.append(normalize_literal(part))
+    return args, normalize_literal(output_line)
+
+def extract_debugbench_test_cases(test_text: str) -> list[tuple[list, object]]:
+    """Extract runnable examples from DebugBench's markdown-like test field."""
+    cases: list[tuple[list, object]] = []
+    current: list[str] = []
+    for line in test_text.splitlines():
+        if "Input:" in line:
+            current = [line]
+        elif current:
+            current.append(line)
+            if "Output:" in line:
+                parsed = parse_example_block("\n".join(current))
+                if parsed is not None:
+                    cases.append(parsed)
+                current = []
+    return cases
+
+def infer_entry_point(code: str) -> str:
+    match = re.search(r"def\s+([A-Za-z_]\w*)\s*\(", code)
+    return match.group(1) if match else "solution"
+
+def _sandbox_globals() -> dict:
+    return {
+        "__builtins__": __builtins__,
+        "ListNode": ListNode,
+        "TreeNode": TreeNode,
+        "build_list": build_list,
+        "build_tree": build_tree,
+        "serialize_list": serialize_list,
+        "serialize_tree": serialize_tree,
+        "collections": collections,
+        "deque": deque,
+        "defaultdict": defaultdict,
+        "Counter": Counter,
+        "List": List,
+        "Optional": Optional,
+        "Dict": Dict,
+        "Set": Set,
+        "Tuple": Tuple,
+    }
+
+def _annotation_text(annotation) -> str:
+    if annotation is inspect.Signature.empty:
+        return ""
+    return getattr(annotation, "__name__", str(annotation))
+
+def _convert_inputs(func, test_inputs: list) -> list:
+    try:
+        params = list(inspect.signature(func).parameters.values())
+    except (TypeError, ValueError):
+        params = []
+
+    converted = []
+    for idx, value in enumerate(test_inputs):
+        param = params[idx] if idx < len(params) else None
+        name = param.name.lower() if param else ""
+        annotation = _annotation_text(param.annotation) if param else ""
+        if isinstance(value, list) and ("TreeNode" in annotation or name in {"root", "node"}):
+            converted.append(build_tree(value))
+        elif isinstance(value, list) and ("ListNode" in annotation or name in {"head", "linkedlist"}):
+            converted.append(build_list(value))
+        else:
+            converted.append(value)
+    return converted
+
+def _normalize_result(result):
+    if isinstance(result, ListNode):
+        return serialize_list(result)
+    if isinstance(result, TreeNode):
+        return serialize_tree(result)
+    return result
 
 def worker_process(patched_code: str, entry_point: str, test_inputs: list, queue: multiprocessing.Queue):
     """
     子进程执行器：在一个受限环境中运行 LLM 生成的代码
     """
     try:
-        # 1. 创建隔离的执行命名空间，并预置数据结构和构建函数
-        local_env = {}
-        local_env['ListNode'] = ListNode
-        local_env['TreeNode'] = TreeNode
-        local_env['build_list'] = build_list
-        local_env['build_tree'] = build_tree
-        local_env['serialize_list'] = serialize_list
-        local_env['serialize_tree'] = serialize_tree
+        # 1. 创建隔离的执行命名空间，并预置 LeetCode 常用类型和工具
+        local_env = _sandbox_globals()
         
         # 将标准输出重定向，防止 LLM 代码里的 print 污染主程序的控制台日志
         captured_stdout = io.StringIO()
@@ -107,8 +244,12 @@ def worker_process(patched_code: str, entry_point: str, test_inputs: list, queue
         # 2. 编译并执行补丁代码
         exec(patched_code, local_env, local_env)
 
-        # 3. 检查入口函数是否存在
-        if entry_point not in local_env:
+        # 3. 检查入口函数是否存在，优先支持 LeetCode 的 Solution().method(...)
+        if "Solution" in local_env and hasattr(local_env["Solution"], entry_point):
+            func = getattr(local_env["Solution"](), entry_point)
+        elif entry_point in local_env:
+            func = local_env[entry_point]
+        else:
             queue.put({
                 "status": "RuntimeError", 
                 "error_type": "NameError", 
@@ -116,11 +257,9 @@ def worker_process(patched_code: str, entry_point: str, test_inputs: list, queue
             })
             return
 
-        func = local_env[entry_point]
-
         # 4. 执行测试用例 (假设 test_inputs 是解包后的参数列表)
         # 注意：DebugBench 的输入可能是多参数的，所以使用 *解包
-        result = func(*test_inputs)
+        result = func(*_convert_inputs(func, test_inputs))
 
         # 恢复标准输出
         sys.stdout = sys.__stdout__
@@ -128,7 +267,7 @@ def worker_process(patched_code: str, entry_point: str, test_inputs: list, queue
         # 5. 将成功运行的结果塞入队列
         queue.put({
             "status": "Success",
-            "result": result
+            "result": _normalize_result(result)
         })
 
     except Exception as e:

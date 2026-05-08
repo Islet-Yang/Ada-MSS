@@ -1,0 +1,9 @@
+{
+  "run_id": "20260505_062550",
+  "config": "configs/default.json",
+  "dataset": "data/processed/debugbench.jsonl",
+  "samples": 150,
+  "base_url": "http://127.0.0.1:8030/v1",
+  "model": "local_qwen",
+  "max_tokens": 2048
+}

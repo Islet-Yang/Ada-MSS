@@ -1,0 +1,549 @@
+{
+  "total": 10,
+  "success": 4,
+  "success_rate": 0.4,
+  "items": [
+    {
+      "task_id": "moving-stones-until-consecutive-ii_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:IndentationError",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "We are given a buggy code and we must fix it. The bug is: the increment of `starting_index` is incorrectly indented outside the while loop.",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "We are given a bug explanation: \"In python, indentation is significant in that it denotes a block of code. The increment operator for 'starting_index' is incorrectly indented outside the while loop.\"",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'invalid syntax (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    We are given a bug explanation: \"In python, indentation is significant in that it denotes a block of code. The increment operator for \\'starting_index\\' is incorrectly indented outside the while loop.\"\\n       ^^^\\nSyntaxError: invalid syntax\\n'}",
+          "prompt_tokens": 1177,
+          "completion_tokens": 2048,
+          "total_tokens": 3225,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "class Solution:\n    def numMovesStonesII(self, stones: List[int]) -> List[int] :\n        if move_penultimate == 0 or move_final == 0 : \n        for index, stone in enumerate(stones) :\n            while stones[starting_index] <= stone - stone_length :",
+          "validation_passed": false,
+          "validation_error_type": "IndentationError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'IndentationError', 'message': \"expected an indented block after 'if' statement on line 3 (<string>, line 4)\", 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 4\\n    for index, stone in enumerate(stones) :\\n    ^^^\\nIndentationError: expected an indented block after \\'if\\' statement on line 3\\n'}",
+          "prompt_tokens": 469,
+          "completion_tokens": 2048,
+          "total_tokens": 2517,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "We are given a buggy code and we must fix it. The bug is: the increment of `starting_index` is incorrectly indented outside the while loop.",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'invalid syntax (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    We are given a buggy code and we must fix it. The bug is: the increment of `starting_index` is incorrectly indented outside the while loop.\\n       ^^^\\nSyntaxError: invalid syntax\\n'}",
+          "prompt_tokens": 1495,
+          "completion_tokens": 2048,
+          "total_tokens": 3543,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 3141,
+      "completion_tokens": 6144,
+      "total_tokens": 9285
+    },
+    {
+      "task_id": "largest-number-after-mutating-substring_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:IndentationError",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "We are given a buggy code and we must fix it so that it passes the examples.\n The problem: We have a string `num` and a list `change` of 10 integers (for digits 0 to 9).\n We want to replace the leftmost substring of consecutive digits that can be replaced to get a larger number, but we have to be careful.\n\n The bug: The indents of the for loop and return statement are not aligned properly with the method body.\n\n Looking at the provided code:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n\n         return \"\".join(num)\n\n The issue: The for loop is indented with 4 spaces (as per the code above) but the problem says the indents are not aligned.\n\n However, note that the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n In the provided code, the for loop is indented by 4 spaces (which is correct for a method body) and the return is at the same level as the for loop? Actually, the code as written has:\n\n     num = list(num)\n     on = False \n     for i, ch in enumerate(num): \n         ... \n     return ...\n\n But the problem says the indents are not aligned. Let me check the original code string:\n\n     \"class Solution:\n        def maximumNumber(self, num: str, change: List[int]) -> str:\n            num = list(num)\n            on = False \n         for i, ch in enumerate(num): \n             x = int(ch)\n             if x < change[x]: \n                 on = True\n                 num[i] = str(change[x])\n             elif x > change[x] and on: break\n     return \"\".join(num)\"\n\n The problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n Actually, the code as written has the for loop indented by 4 spaces (the same as the previous lines) and the return statement is at the same level as the for loop? But in the code above, the return is written without the same indentation as the for loop? \n\n However, the problem states: \"Pruning level: CDS\" meaning we are to fix the code to be executable and pass the examples.\n\n Let's run the provided examples with the current code to see what happens.\n\n Example 1: num = \"132\", change = [9,8,5,0,3,6,4,2,6,8]\n   We want to get \"832\"\n\n Steps:\n   Convert num to list: ['1','3','2']\n   on = False\n   i=0: ch='1' -> x=1\n        change[1] = 8 -> 1 < 8 -> True -> set on=True, and set num[0] = '8'\n        Now num = ['8','3','2']\n   i=1: ch='3' -> x=3\n        change[3] = 0 -> 3 > 0 -> but we have on=True -> so we break? \n        But the condition for break is: `elif x > change[x] and on: break`\n        So at i=1: 3>0 and on is True -> break.\n\n   Then we return \"832\" -> which is correct.\n\n Example 2: num = \"021\", change = [9,4,3,5,7,2,1,9,0,6]\n   We want \"934\"\n\n   Steps:\n        num = ['0','2','1']\n        on = False\n        i=0: x=0 -> change[0]=9 -> 0<9 -> True -> set on=True, num[0]='9'\n        i=1: x=2 -> change[2]=3 -> 2<3 -> True -> set on=True, num[1]='3'\n        i=2: x=1 -> change[1]=4 -> 1<4 -> True -> set on=True, num[2]='4'\n        Then we return \"934\" -> correct.\n\n Example 3: num = \"5\", change = [1,4,7,5,3,2,5,6,9,4]\n        x=5 -> change[5]=2 -> 5>2 -> and on is False -> so we don't break and we don't set on to True.\n        Then we return \"5\" -> correct.\n\n But wait: the problem says the bug is in the indents. The code as written in the problem has:\n\n        for i, ch in enumerate(num): \n            x = int(ch)\n            if x < change[x]: \n                on = True\n                num[i] = str(change[x])\n            elif x > change[x] and on: break\n\n        return \"\".join(num)\n\n However, the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n In the code above, the for loop is indented by 4 spaces (which is correct) and the return is at the same level as the for loop? Actually, the return is at the same level as the for loop? \n\n But in the problem statement, the code is written with the for loop having 4 spaces of indentation (the same as the previous lines) and the return statement is written without the same indentation? \n\n Actually, the problem says: \"The indents of for loop and return statement are not aligned properly\". \n\n Let me look at the code as provided in the problem:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n     return \"\".join(num)\n\n The issue: The for loop is indented by 4 spaces (the same as the previous lines) but the return statement is written without the indentation? Actually, the problem says the return statement is not aligned.\n\n In the problem's code, the return statement is written at the same level as the class? That would be a big problem.\n\n But note: the problem says \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n How the code is written in the problem:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n     return \"\".join(num)\n\n The problem: the for loop is indented by 4 spaces (which is correct) but the return statement is written at the same level as the class? Actually, the problem says the return statement is not aligned with the method body.\n\n In the problem's code, the return statement is written without the 4 spaces of indentation? Actually, the problem says: \"The indents of for loop and return statement are not aligned properly\".\n\n Let me count the spaces in the problem's code:\n\n     The method body starts with 4 spaces (for the class method).\n     The line: \"on = False\" has 4 spaces? Actually, the problem writes: \"on = False \" (with a space at the end) but that's not the issue.\n\n     The for loop: it has 4 spaces? Actually, the problem writes: \" for i, ch in enumerate(num): \" -> but note: the problem says the code is:\n\n          class Solution:\n              def maximumNumber(self, num: str, change: List[int]) -> str:\n                  num = list(num)\n                  on = False \n               for i, ch in enumerate(num): \n\n     The problem says: the for loop and return statement are not aligned.\n\n     The issue: the for loop is written with 4 spaces (the same as the previous lines) but the return statement is written without the 4 spaces? Actually, the problem writes the return statement at the same level as the class? \n\n     But the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n     I think the problem means that the for loop is indented by 4 spaces (which is correct) but the return statement is not indented at all? \n\n     However, in the problem's code, the return statement is written after the for loop without the same indentation? \n\n     Actually, the problem says: \"Pruning level: CDS\" meaning we are to fix the code to be executable.\n\n     Let me write the code with proper indentation.\n\n     The method body should have:\n        - 4 spaces for the class method body.\n\n     The for loop should be indented by 4 spaces (so that it's inside the method).\n     The return statement should be at the same level as the for loop (i.e., 4 spaces).\n\n     The problem's code has the return statement written without the 4 spaces? \n\n     In the problem's code string: \n          ... break\n     return \"\".join(num)\n\n     This return statement is written without the 4 spaces? Actually, in the",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "blocks. Output exactly one repaired Python file and nothing else.\"\n\n Let me check the examples:\n\n Example 1: Input: num = \"132\", change = [9,8,5,0,3,6,4,2,6,8] -> Output: \"832\"\n\n How does the code work?\n   num = ['1','3','2']\n   on = False\n   i=0: ch='1' -> x=1\n        change[1] = 8 -> 1 < 8 -> True -> set on=True, num[0]='8'\n   i=1: ch='3' -> x=3\n        change[3]=0 -> 3>0 -> but we have the condition: if x < change[x] -> 3<0? False -> then elif: x>change[x] and on -> 3>0 and on (True) -> so break? \n        But wait, the condition for break is: \"elif x > change[x] and on: break\"",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 1) (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    blocks. Output exactly one repaired Python file and nothing else.\"\\n                                                                     ^\\nSyntaxError: unterminated string literal (detected at line 1)\\n'}",
+          "prompt_tokens": 599,
+          "completion_tokens": 2048,
+          "total_tokens": 2647,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "class Solution:\n    def maximumNumber(self, num: str, change: List[int]) -> str:\n     for i, ch in enumerate(num): \n         if x < change[x]:",
+          "validation_passed": false,
+          "validation_error_type": "IndentationError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'IndentationError', 'message': \"expected an indented block after 'if' statement on line 4 (<string>, line 4)\", 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 4\\n    if x < change[x]:\\n                     ^\\nIndentationError: expected an indented block after \\'if\\' statement on line 4\\n'}",
+          "prompt_tokens": 550,
+          "completion_tokens": 2048,
+          "total_tokens": 2598,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "We are given a buggy code and we must fix it so that it passes the examples.\n The problem: We have a string `num` and a list `change` of 10 integers (for digits 0 to 9).\n We want to replace the leftmost substring of consecutive digits that can be replaced to get a larger number, but we have to be careful.\n\n The bug: The indents of the for loop and return statement are not aligned properly with the method body.\n\n Looking at the provided code:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n\n         return \"\".join(num)\n\n The issue: The for loop is indented with 4 spaces (as per the code above) but the problem says the indents are not aligned.\n\n However, note that the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n In the provided code, the for loop is indented by 4 spaces (which is correct for a method body) and the return is at the same level as the for loop? Actually, the code as written has:\n\n     num = list(num)\n     on = False \n     for i, ch in enumerate(num): \n         ... \n     return ...\n\n But the problem says the indents are not aligned. Let me check the original code string:\n\n     \"class Solution:\n        def maximumNumber(self, num: str, change: List[int]) -> str:\n            num = list(num)\n            on = False \n         for i, ch in enumerate(num): \n             x = int(ch)\n             if x < change[x]: \n                 on = True\n                 num[i] = str(change[x])\n             elif x > change[x] and on: break\n     return \"\".join(num)\"\n\n The problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n Actually, the code as written has the for loop indented by 4 spaces (the same as the previous lines) and the return statement is at the same level as the for loop? But in the code above, the return is written without the same indentation as the for loop? \n\n However, the problem states: \"Pruning level: CDS\" meaning we are to fix the code to be executable and pass the examples.\n\n Let's run the provided examples with the current code to see what happens.\n\n Example 1: num = \"132\", change = [9,8,5,0,3,6,4,2,6,8]\n   We want to get \"832\"\n\n Steps:\n   Convert num to list: ['1','3','2']\n   on = False\n   i=0: ch='1' -> x=1\n        change[1] = 8 -> 1 < 8 -> True -> set on=True, and set num[0] = '8'\n        Now num = ['8','3','2']\n   i=1: ch='3' -> x=3\n        change[3] = 0 -> 3 > 0 -> but we have on=True -> so we break? \n        But the condition for break is: `elif x > change[x] and on: break`\n        So at i=1: 3>0 and on is True -> break.\n\n   Then we return \"832\" -> which is correct.\n\n Example 2: num = \"021\", change = [9,4,3,5,7,2,1,9,0,6]\n   We want \"934\"\n\n   Steps:\n        num = ['0','2','1']\n        on = False\n        i=0: x=0 -> change[0]=9 -> 0<9 -> True -> set on=True, num[0]='9'\n        i=1: x=2 -> change[2]=3 -> 2<3 -> True -> set on=True, num[1]='3'\n        i=2: x=1 -> change[1]=4 -> 1<4 -> True -> set on=True, num[2]='4'\n        Then we return \"934\" -> correct.\n\n Example 3: num = \"5\", change = [1,4,7,5,3,2,5,6,9,4]\n        x=5 -> change[5]=2 -> 5>2 -> and on is False -> so we don't break and we don't set on to True.\n        Then we return \"5\" -> correct.\n\n But wait: the problem says the bug is in the indents. The code as written in the problem has:\n\n        for i, ch in enumerate(num): \n            x = int(ch)\n            if x < change[x]: \n                on = True\n                num[i] = str(change[x])\n            elif x > change[x] and on: break\n\n        return \"\".join(num)\n\n However, the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n In the code above, the for loop is indented by 4 spaces (which is correct) and the return is at the same level as the for loop? Actually, the return is at the same level as the for loop? \n\n But in the problem statement, the code is written with the for loop having 4 spaces of indentation (the same as the previous lines) and the return statement is written without the same indentation? \n\n Actually, the problem says: \"The indents of for loop and return statement are not aligned properly\". \n\n Let me look at the code as provided in the problem:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n     return \"\".join(num)\n\n The issue: The for loop is indented by 4 spaces (the same as the previous lines) but the return statement is written without the indentation? Actually, the problem says the return statement is not aligned.\n\n In the problem's code, the return statement is written at the same level as the class? That would be a big problem.\n\n But note: the problem says \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n How the code is written in the problem:\n\n     class Solution:\n         def maximumNumber(self, num: str, change: List[int]) -> str:\n             num = list(num)\n             on = False \n          for i, ch in enumerate(num): \n              x = int(ch)\n              if x < change[x]: \n                  on = True\n                  num[i] = str(change[x])\n              elif x > change[x] and on: break\n     return \"\".join(num)\n\n The problem: the for loop is indented by 4 spaces (which is correct) but the return statement is written at the same level as the class? Actually, the problem says the return statement is not aligned with the method body.\n\n In the problem's code, the return statement is written without the 4 spaces of indentation? Actually, the problem says: \"The indents of for loop and return statement are not aligned properly\".\n\n Let me count the spaces in the problem's code:\n\n     The method body starts with 4 spaces (for the class method).\n     The line: \"on = False\" has 4 spaces? Actually, the problem writes: \"on = False \" (with a space at the end) but that's not the issue.\n\n     The for loop: it has 4 spaces? Actually, the problem writes: \" for i, ch in enumerate(num): \" -> but note: the problem says the code is:\n\n          class Solution:\n              def maximumNumber(self, num: str, change: List[int]) -> str:\n                  num = list(num)\n                  on = False \n               for i, ch in enumerate(num): \n\n     The problem says: the for loop and return statement are not aligned.\n\n     The issue: the for loop is written with 4 spaces (the same as the previous lines) but the return statement is written without the 4 spaces? Actually, the problem writes the return statement at the same level as the class? \n\n     But the problem says: \"The indents of for loop and return statement are not aligned properly with method body.\"\n\n     I think the problem means that the for loop is indented by 4 spaces (which is correct) but the return statement is not indented at all? \n\n     However, in the problem's code, the return statement is written after the for loop without the same indentation? \n\n     Actually, the problem says: \"Pruning level: CDS\" meaning we are to fix the code to be executable.\n\n     Let me write the code with proper indentation.\n\n     The method body should have:\n        - 4 spaces for the class method body.\n\n     The for loop should be indented by 4 spaces (so that it's inside the method).\n     The return statement should be at the same level as the for loop (i.e., 4 spaces).\n\n     The problem's code has the return statement written without the 4 spaces? \n\n     In the problem's code string: \n          ... break\n     return \"\".join(num)\n\n     This return statement is written without the 4 spaces? Actually, in the",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'invalid syntax (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    We are given a buggy code and we must fix it so that it passes the examples.\\n       ^^^\\nSyntaxError: invalid syntax\\n'}",
+          "prompt_tokens": 599,
+          "completion_tokens": 2048,
+          "total_tokens": 2647,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 1748,
+      "completion_tokens": 6144,
+      "total_tokens": 7892
+    },
+    {
+      "task_id": "nim-game_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:ModuleNotFoundError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "class Solution:\n    def canWinNim(self, n: int) -> bool:\n        return n % 4 != 0\n\nimport pytest\n\ndef test_solution():\n    # Basic test: solution should be callable\n    try:\n        # This is a placeholder - actual tests require leetcode env\n        pass\n    except Exception as e:\n        pytest.skip(f\"Skipping: {e}\")",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "blocks\". \n\n However, the problem says: \"Return only executable Python code\". \n\n But note: the problem says: \"the code below\" is the class and the test function. The test function is written with a placeholder. \n\n But the problem says: \"the buggy Python code below\" has an indentation error. The error is in the class.\n\n So we fix the class by adding 4 spaces to the method.\n\n Let me write the fixed code:\n\n We'll output:\n\n import pytest\n\n class Solution:\n     def canWinNim(self, n: int) -> bool:",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 1) (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    blocks\". \\n          ^\\nSyntaxError: unterminated string literal (detected at line 1)\\n'}",
+          "prompt_tokens": 359,
+          "completion_tokens": 2048,
+          "total_tokens": 2407,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "blocks\". We output the code without any extra text.\n\n Let me check: the problem says: \"the first non-whitespace token must be import, from, class, or def\". Our code starts with \"class\", so it's okay.\n\n But note: the problem says: \"the Examples\" section has the tests. We are to output the code that passes the examples. The examples are the three inputs. We have fixed the class to return n % 4 != 0, which passes the examples.\n\n However, the test function is written as a placeholder and doesn't actually test the solution. But the problem says: \"the examples\" (the three inputs) are the ones we must pass. So we don't need to change the test function.\n\n But the problem says: \"the buggy Python code below\" is the class and the method. The rest is provided as context? Actually, the problem says: \"Tests:\" and then the code. So we output the entire context but fixed.\n\n However, the problem says: \"Repair the buggy Python code below\". The buggy code below is the class and",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 1) (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    blocks\". We output the code without any extra text.\\n          ^\\nSyntaxError: unterminated string literal (detected at line 1)\\n'}",
+          "prompt_tokens": 349,
+          "completion_tokens": 2048,
+          "total_tokens": 2397,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "class Solution:\n    def canWinNim(self, n: int) -> bool:\n        return n % 4 != 0\n\nimport pytest\n\ndef test_solution():\n    # Basic test: solution should be callable\n    try:\n        # This is a placeholder - actual tests require leetcode env\n        pass\n    except Exception as e:\n        pytest.skip(f\"Skipping: {e}\")",
+          "validation_passed": false,
+          "validation_error_type": "ModuleNotFoundError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'ModuleNotFoundError', 'message': \"No module named 'pytest'\", 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 5, in <module>\\nModuleNotFoundError: No module named \\'pytest\\'\\n'}",
+          "prompt_tokens": 359,
+          "completion_tokens": 1915,
+          "total_tokens": 2274,
+          "finish_reason": "stop"
+        }
+      ],
+      "prompt_tokens": 1067,
+      "completion_tokens": 6011,
+      "total_tokens": 7078
+    },
+    {
+      "task_id": "find-all-possible-recipes-from-given-supplies_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "blocks.\" and \"Output exactly one repaired Python file\".\n\n Let me write the code:\n\n We'll do:\n   from typing import List\n\n   class Solution:\n        def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n            ... (the rest of the code)\n\n However, the problem says: the first non-whitespace token must be import, from, class, or def.\n\n We start with \"from\", so that's acceptable.\n\n But wait: the problem says: \"The first non-whitespace token must be import, from, class, or def.\" -> we start with \"from\", so that's good.\n\n Alternatively, we could have started with \"class\", but the problem says the first token must be one of those. We are adding an import so we start with \"from\".\n\n However, the problem says: \"the buggy code\" as provided. The provided code does not have the import. So we add it.\n\n But note: the problem says: \"Pruning level: CDS\" - meaning we are to fix the code to be correct.\n\n Let me check the examples: the examples are run in a context that has the import? \n\n Since the problem says: \"Return only executable Python code\", we must make it runnable.\n\n So the plan:\n   - Add the import for List at the top.\n   - Fix the indentation of the method.\n\n However, the problem says: \"Do not reason step by step.\" so I'll write the code.\n\n But note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's acceptable.\n\n Let me write the fixed code:\n\n from typing import List\n\n class Solution:\n     def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n         dct=defaultdict(lambda :[])\n         indegree={}\n         n=len(recepies)\n\n         for i in recepies:\n             indegree[i]=0\n\n         for i in range(n):\n             for j in ingredients[i]:\n                 indegree[j]=0\n\n         for i in range(n):\n             for j in ingredients[i]:\n                 dct[j].append(recepies[i])\n                 indegree[recepies[i]]+=1\n\n         st=[]\n         for i in indegree:\n             if indegree[i]==0:\n                 st.append(i)\n         flst=[]\n         ans=defaultdict(lambda :[])\n         while st:\n             x=st.pop(0)\n             for i in dct[x]:\n                 for j in ans[x]:\n                     if j not in ans[i]:\n                         ans[i].append(j)\n                 ans[i].append(x)\n                 indegree[i]-=1\n                 if indegree[i]==0:\n                     st.append(i)\n             if x in recepies:\n                 for k in ans[x]:\n                     if k not in supplies:\n                         break\n                 else:\n                     flst.append(x)\n                     supplies.append(x)\n\n         return flst\n\n But wait: the problem says the method was not indented. We fixed that by adding 4 spaces.\n\n However, the problem says: \"the buggy code\" as provided. The provided code had the method without indentation? \n\n In the problem statement, the code is written as:\n\n class Solution:\n def findAllRecipes(...)\n\n So we add 4 spaces at the beginning of the method.\n\n Also, note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's good.\n\n But the problem also says: \"No markdown. No explanation.\"\n\n We output exactly the code.\n\n However, the problem says: \"Return only executable Python code.\"\n\n Let me check: the code uses `defaultdict` from `collections` but we don't have an import for defaultdict. \n\n The problem says: \"Repair the buggy Python code below\". The original code uses `defaultdict` without importing it.\n\n So we must also add: from collections import defaultdict\n\n Therefore, we have two imports.\n\n Revised plan:\n   - from typing import List\n   - from collections import defaultdict\n\n And then the class with the indented method.\n\n But note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's acceptable.\n\n Let me write the code accordingly.\n\n However, the problem says: \"Pruning level: CDS\" - but we are to fix the code to be executable.\n\n We'll do:\n\n from typing import List\n from collections import defaultdict\n\n class Solution:\n     def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n         dct = defaultdict(lambda: [])\n         indegree = {}\n         n = len(recepies)\n\n         for i in recepies:\n             indegree",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "blocks. Output exactly one repaired Python file and nothing else.\"\n\n Steps:\n\n 1. We must fix the indentation of the method `findAllRecipes` (so it's indented by 4 spaces under the class).\n 2. We note that the code uses `recepies` (with an extra 'e') but the problem says: \"All the values of recipes and supplies combined are unique.\" and the examples use \"recipes\". However, the problem says: \"Repair the buggy Python code below so it passes the examples.\" and the examples are given. We must fix the code to be correct.\n\n But wait: the problem says: \"The bug explanation: The methods in python classes should be indented\". So the primary fix is the indentation.\n\n However, the code has other bugs? Let's look at the examples.\n\n Example 1: \n   recipes = [\"bread\"], ingredients = [[\"yeast\",\"flour\"]], supplies = [\"yeast\",\"flour\",\"corn\"]\n   Output: [\"bread\"]\n\n The code as written (with the indentation fix) might not work because of other issues.\n\n But the problem says: \"Pruning level: TAC\" meaning we are to fix the code to be executable and pass the examples.\n\n Let me try to run the provided code (with the indentation fix) in my mind:\n\n   The code does:\n      dct = defaultdict(list)\n      indegree = {}\n      n = len(recepies)\n\n      for i in recepies:   # this loop: for each recipe in recepies, set indegree[i]=0\n          indegree[i] = 0\n\n      for i in range(n):\n          for j in ingredients[i]:\n              indegree[j] = 0   # This is wrong: we are resetting indegree for every ingredient to 0? \n\n      Then: \n        for i in range(n):\n            for j in ingredients[i]:\n                dct[j].append(recepies[i])\n                indegree[recepies[i]] += 1\n\n      Then: \n        st = []\n        for i in indegree:\n            if indegree[i] == 0:\n                st.append(i)\n\n      Then a while loop on st.\n\n The problem: the second loop (for i in range(n): for j in ingredients[i]: indegree[j]=0) is setting every ingredient to 0. Then later we are adding to indegree for the recipes. But note: the indegree for the ingredients is set to 0 and then we are adding to the recipes? \n\n Actually, the intended algorithm is to build a graph where:\n   - Each recipe is a node.\n   - Each ingredient (that is not a supply) is a node? But the problem says: we have supplies.\n\n However, the code is trying to do a topological sort for the recipes.\n\n Steps of the intended algorithm (from the problem):\n\n   We have:\n      recipes: list of recipes (each recipe is a string)\n      ingredients: list of lists, where ingredients[i] is the list of ingredients for recipe i\n      supplies: list of strings that we already have.\n\n   We want to find all recipes that can be made.\n\n   Approach:\n      We can use Kahn's algorithm for topological sorting.\n\n      Steps:\n        1. Create a graph: for each recipe, we have edges from its ingredients to the recipe (if the ingredient is not a supply, then we need to make it? but note: the problem says we have supplies, so we don't need to make them).\n\n        However, the problem states: \"All the values of recipes and supplies combined are unique.\"\n\n        2. We start with the supplies (which have no dependencies) and then we can build the recipes that depend on supplies.\n\n        But the code does:\n\n          - It initializes indegree for each recipe to 0 (by the first loop: for i in recepies: indegree[i]=0)\n          - Then it sets every ingredient (in the entire ingredients list) to 0? That's a problem.\n\n        Actually, the code is trying to set the indegree for the ingredients to 0? But then it adds the recipes as having indegree from the ingredients.\n\n        The intended indegree for a recipe is the number of ingredients that are not yet available (i.e., not in supplies and not produced by other recipes).\n\n        However, the code does:\n\n          for i in range(n):\n              for j in ingredients[i]:\n                  indegree[j] = 0   # This is wrong: we are resetting the indegree of the ingredient to 0, but we don't want to reset the entire graph.\n\n        This is a critical bug.\n\n        But the problem says: the bug explanation is only about the indentation. However, the problem says: \"Repair the buggy Python code below so it passes the examples.\"\n\n        We must fix the code to pass the examples.\n\n        Let me try to write a correct version.\n\n        Correct approach:\n\n          We want to compute the recipes that can be made.\n\n          Steps:\n            1. We start with the supplies (which are available).\n            2. We build a graph: for each recipe, we have a list of ingredients (which are the prerequisites).\n            3. We also build a reverse graph: for each ingredient, which recipes require it? (so that when we produce an ingredient, we can update the recipes that require it)\n\n          However, note: the problem says that the ingredients for a recipe might be other recipes (which we have to make first).\n\n          We can do:\n\n            Let's have:\n                graph: for each ingredient (that is a recipe or a supply) we don't have a node for every string? Actually, we only care about the recipes and the ingredients that are not supplies.\n\n            But the problem: we have a list of supplies.\n\n            Steps:\n\n              - Create a set of supplies for O(1) lookups.\n              - Create a graph: for each recipe, we have a list of ingredients (the prerequisites). But note: the prerequisites might be other recipes or raw materials.\n\n              - We want to know: for a recipe, how many of its ingredients are available (either in supplies or already produced by the algorithm)?\n\n              - We can do a BFS starting from the supplies.\n\n            Alternatively, we can do:\n\n              Let `available` be a set of supplies initially.\n\n              We create a graph: \n                  `dependencies`: for each recipe, the list of ingredients (that are not in the supplies) that we need to produce? Actually, we don't know.\n\n              Instead, we can do:\n\n                We'll create a dictionary `graph` that maps a recipe to the list of ingredients (the raw ingredients) that it requires.\n\n                But we also need to know: for each ingredient (that is a recipe), what recipes depend on it? \n\n                We can build:\n\n                  `in_degree`: for each recipe, the number of ingredients that are not yet available (i.e., the number of ingredients that are not in the initial supplies and not produced by the algorithm).\n\n                However, the problem is that the ingredients might be other recipes.\n\n            Standard solution for this problem (Leetcode 1262) is:\n\n                from collections import defaultdict, deque\n\n                class Solution:\n                    def findAllRecipes(self, recipes",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 1) (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    blocks. Output exactly one repaired Python file and nothing else.\"\\n                                                                     ^\\nSyntaxError: unterminated string literal (detected at line 1)\\n'}",
+          "prompt_tokens": 841,
+          "completion_tokens": 2048,
+          "total_tokens": 2889,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "We are given a buggy code and we must fix it so that it passes the examples.\n The problem: We are to write a function `findAllRecipes` that takes three lists: \n   - `recepies` (which is a list of recipe names)\n   - `ingredients` (a list of lists, where each inner list is the ingredients for a recipe)\n   - `supplies` (a list of available supplies)\n\n The goal: return a list of recipes that can be made (i.e., all the ingredients for the recipe are either in `supplies` or can be made from other recipes).\n\n The bug: The code is not properly indented. The method `findAllRecipes` is not indented (it's written as a top-level function without being inside the class).\n\n Steps to fix:\n 1. The class `Solution` must have the method `findAllRecipes` indented (as a method of the class).\n 2. We note that the provided code has multiple loops and conditionals that are not correctly structured.\n\n However, the problem says: \"The methods in python classes should be indented, but in the buggy code, 'findAllRecipes' is not indented.\"\n\n So the immediate fix is to indent the method.\n\n But note: the code we are given is a mix of loops and conditionals that are broken. We must also fix the logic to pass the examples.\n\n Let's think about the intended algorithm:\n\n We can model this as a directed graph where:\n   - Each recipe is a node.\n   - There is an edge from recipe A to recipe B if recipe B requires recipe A as an ingredient.\n\n However, the problem is: we have a set of supplies (which are available) and we want to know which recipes can be made.\n\n Steps for the algorithm (known as topological sort for dependency resolution):\n\n 1. We start with the supplies (which are available).\n 2. We build a graph of dependencies: for each recipe, we know what ingredients it requires (which might be other recipes or supplies).\n 3. We also need to know the number of dependencies (indegree) for each recipe (i.e., how many ingredients are missing that are not supplies and not yet made).\n\n Alternatively, we can do:\n\n   - Create a set of supplies.\n   - Create a graph: for each recipe, we have a list of ingredients (which might be recipes or raw supplies).\n   - We'll maintain a queue (or stack) of recipes that we can make (starting from the supplies).\n\n However, the problem is that the ingredients for a recipe might be other recipes (which we have to make first).\n\n Standard solution:\n\n   Let's define:\n      n = len(recipes)\n      graph = {}  # mapping from recipe to list of recipes that depend on it (reverse graph)\n      indegree = {recipe: 0 for recipe in recipes}   # but note: we don't have all recipes as keys? Actually, we have the recipes list.\n\n   Steps:\n      1. Create a set of supplies.\n      2. Build a graph: for each recipe i, for each ingredient in ingredients[i]:\n            if the ingredient is a recipe (i.e., in the recipes list) then we add an edge from ingredient to recipe i? \n            Actually, we want: if recipe i requires ingredient j, and j is a recipe (so j is in the recipes list), then we add j as a prerequisite for i.\n\n      3. We can also have a list of the recipes that we can make (the answer).\n\n   Alternatively, we can do a BFS starting from the supplies.\n\n   Known approach (from Leetcode problem 1262):\n\n      We can do:\n        - Create a set of supplies.\n        - Create a graph: for each recipe, we have a list of ingredients (the raw ingredients that are not recipes? but we don't know which are recipes until we check)\n        - Actually, we can do:\n\n          Let's have:\n            graph = defaultdict(list)   # for each ingredient (that is a recipe), which recipes depend on it?\n            indegree = {recipe: 0 for recipe in recipes}   # but we don't know the indegree for each recipe? Actually, we can compute the indegree as the number of ingredients that are not in supplies and not yet made.\n\n        However, a simpler approach:\n\n          We can use a queue for recipes that we can make (starting from the supplies).\n\n          Steps:\n            - Create a set `available` from `supplies`.\n            - Create a list `ans` for the result (recipes that we can make).\n            - Create a dictionary (or list) `dependencies` that for each recipe, we store the list of ingredients that are not in `available` (but we don't know until we process).\n\n          Actually, we can do:\n\n            Let `graph` be a dictionary: key: recipe, value: list of recipes that require this recipe (as an ingredient)\n            Let `indegree` be a dictionary: for each recipe, the number of ingredients that are not yet available (i.e., the number of ingredients that are not in the current `available` set and not yet made).\n\n          But note: the problem says that the ingredients for a recipe might be either supplies (which we have) or other recipes (which we might make later).\n\n          Algorithm:\n\n            Step 1: Create a set `supplies_set` from `supplies`.\n            Step 2: Build a graph (adjacency list) for dependencies: \n                For each recipe index i (with recipe name = recipes[i]), \n                    for each ingredient in ingredients[i]:\n                        if ingredient is in the set of recipes (i.e., in the `recipes` list) then we add an edge from ingredient to recipe i (meaning: recipe i depends on ingredient)\n                But note: we don't have a set of recipes? We can create a set of recipes.\n\n            Step 3: Compute the indegree for each recipe: \n                indegree[recipe] = number of ingredients that are not in `supplies_set` and not yet made? \n                Actually, we can initialize indegree for each recipe as the count of ingredients that are not in `supplies_set`? \n                But wait: we don't know if an ingredient is a recipe or a supply. \n\n            Alternatively, we can do:\n\n                Let `indegree` be a dictionary (or list) that counts the number of ingredients that are not available (initially, we consider only the supplies as available).\n\n                Steps:\n                  - Create a set `available` = set(supplies)\n                  - Create a list `ans` = [] (for the result)\n                  - Create a graph: `graph` = defaultdict(list)   # for each recipe, the recipes that depend on it (so we can update when we make a recipe)\n                  - Create a list `indegree` for each recipe (we'll use a dictionary) that counts the number of ingredients that are not in `available` (but note: we don't know the entire dependency chain at the beginning)\n\n                Actually, we can do:\n\n                  For each recipe i (with name = recipes[i]):\n                    count = 0\n                    for each ingredient in ingredients[i]:\n                        if ingredient not in available:\n                            count += 1\n                    indegree[recipes[i]] = count\n\n                Then we start with all recipes that have indegree 0 (meaning they have all ingredients in `available`).\n\n                Then we do a BFS:\n\n                  queue = deque([recipe for recipe in recipes if indegree[recipe] == 0])\n                  while queue:\n                    recipe = queue.popleft()\n                    ans.append(recipe)\n                    for each dependent recipe (in graph[recipe]): \n                         indegree[dependent] -= 1\n                         if indegree[dependent] == 0:\n                             queue.append(dependent)\n\n                But note: the graph we built: \n                    We built: for each recipe i, for each ingredient that is a recipe (i.e., in the recipes list) we add an edge from that ingredient to recipe i? \n                    Actually, we want: when we make an ingredient (recipe), then we can reduce the indegree of all recipes that require that ingredient.\n\n                How to build the graph?\n                  We can do:\n                    graph = defaultdict(list)\n                    for i in range(len(recipes)):\n                        for ing in ingredients[i]:\n                            if ing in recipes_set:   # meaning ing is a recipe (so we have a recipe named `ing`)\n                                graph[ing].append(recipes[i])\n                                # and we also note: the recipe `recipes[i]` depends on `ing` (so we have an edge from `ing` to `recipes[i]`)\n\n                However, note: the problem says that the ingredients might be raw (not recipes) and we don't have a graph for raw ingredients.\n\n                But in the BFS, we only care about the recipes that are not available. The raw ingredients that are not in the supplies are not in the graph? \n\n                Actually, the above algorithm (with indegree) is standard for this problem.\n\n          Steps:\n\n            recipes_set = set(recipes)   # the set of all recipe names\n            available = set(supplies)\n\n            # Build graph: for each recipe, which recipes depend on it?\n            graph = defaultdict(list)\n            indegree = {recipe: 0 for recipe in recipes}   # we'll initialize to 0, then we'll count the dependencies that are not available\n\n            # But note: we don't want to count the available ones? Actually, we want to count the ingredients that are not available (and not yet made) as the dependencies.\n\n            # Instead, we can do:\n            #   For each recipe i, count the number of ingredients that are not in `available` (and also not in the set of recipes that",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 9) (<string>, line 9)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 9\\n    The bug: The code is not properly indented. The method `findAllRecipes` is not indented (it\\'s written as a top-level function without being inside the class).\\n                                                                                               ^\\nSyntaxError: unterminated string literal (detected at line 9)\\n'}",
+          "prompt_tokens": 729,
+          "completion_tokens": 2048,
+          "total_tokens": 2777,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "blocks.\" and \"Output exactly one repaired Python file\".\n\n Let me write the code:\n\n We'll do:\n   from typing import List\n\n   class Solution:\n        def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n            ... (the rest of the code)\n\n However, the problem says: the first non-whitespace token must be import, from, class, or def.\n\n We start with \"from\", so that's acceptable.\n\n But wait: the problem says: \"The first non-whitespace token must be import, from, class, or def.\" -> we start with \"from\", so that's good.\n\n Alternatively, we could have started with \"class\", but the problem says the first token must be one of those. We are adding an import so we start with \"from\".\n\n However, the problem says: \"the buggy code\" as provided. The provided code does not have the import. So we add it.\n\n But note: the problem says: \"Pruning level: CDS\" - meaning we are to fix the code to be correct.\n\n Let me check the examples: the examples are run in a context that has the import? \n\n Since the problem says: \"Return only executable Python code\", we must make it runnable.\n\n So the plan:\n   - Add the import for List at the top.\n   - Fix the indentation of the method.\n\n However, the problem says: \"Do not reason step by step.\" so I'll write the code.\n\n But note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's acceptable.\n\n Let me write the fixed code:\n\n from typing import List\n\n class Solution:\n     def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n         dct=defaultdict(lambda :[])\n         indegree={}\n         n=len(recepies)\n\n         for i in recepies:\n             indegree[i]=0\n\n         for i in range(n):\n             for j in ingredients[i]:\n                 indegree[j]=0\n\n         for i in range(n):\n             for j in ingredients[i]:\n                 dct[j].append(recepies[i])\n                 indegree[recepies[i]]+=1\n\n         st=[]\n         for i in indegree:\n             if indegree[i]==0:\n                 st.append(i)\n         flst=[]\n         ans=defaultdict(lambda :[])\n         while st:\n             x=st.pop(0)\n             for i in dct[x]:\n                 for j in ans[x]:\n                     if j not in ans[i]:\n                         ans[i].append(j)\n                 ans[i].append(x)\n                 indegree[i]-=1\n                 if indegree[i]==0:\n                     st.append(i)\n             if x in recepies:\n                 for k in ans[x]:\n                     if k not in supplies:\n                         break\n                 else:\n                     flst.append(x)\n                     supplies.append(x)\n\n         return flst\n\n But wait: the problem says the method was not indented. We fixed that by adding 4 spaces.\n\n However, the problem says: \"the buggy code\" as provided. The provided code had the method without indentation? \n\n In the problem statement, the code is written as:\n\n class Solution:\n def findAllRecipes(...)\n\n So we add 4 spaces at the beginning of the method.\n\n Also, note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's good.\n\n But the problem also says: \"No markdown. No explanation.\"\n\n We output exactly the code.\n\n However, the problem says: \"Return only executable Python code.\"\n\n Let me check: the code uses `defaultdict` from `collections` but we don't have an import for defaultdict. \n\n The problem says: \"Repair the buggy Python code below\". The original code uses `defaultdict` without importing it.\n\n So we must also add: from collections import defaultdict\n\n Therefore, we have two imports.\n\n Revised plan:\n   - from typing import List\n   - from collections import defaultdict\n\n And then the class with the indented method.\n\n But note: the problem says: \"the first non-whitespace token must be import, from, class, or def\". We start with \"from\", so that's acceptable.\n\n Let me write the code accordingly.\n\n However, the problem says: \"Pruning level: CDS\" - but we are to fix the code to be executable.\n\n We'll do:\n\n from typing import List\n from collections import defaultdict\n\n class Solution:\n     def findAllRecipes(self, recepies: List[str], ingredients: List[List[str]], supplies: List[str]) -> List[str]:\n         dct = defaultdict(lambda: [])\n         indegree = {}\n         n = len(recepies)\n\n         for i in recepies:\n             indegree",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'unterminated string literal (detected at line 1) (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    blocks.\" and \"Output exactly one repaired Python file\".\\n                                                         ^\\nSyntaxError: unterminated string literal (detected at line 1)\\n'}",
+          "prompt_tokens": 860,
+          "completion_tokens": 2048,
+          "total_tokens": 2908,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 2430,
+      "completion_tokens": 6144,
+      "total_tokens": 8574
+    },
+    {
+      "task_id": "sequential-digits_python3",
+      "status": "repair_success",
+      "attempts": 1,
+      "final_level": "TAC",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_success"
+      ],
+      "candidate_patch": "import collections\n\nclass Solution:\n    def sequentialDigits(self, low, high):\n        out = []\n        queue = collections.deque(range(1, 10))\n        while queue:\n            elem = queue.popleft()\n            if low <= elem <= high:\n                out.append(elem)\n            last = elem % 10\n            if last < 9:\n                queue.append(elem * 10 + last + 1)\n        return out",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "import collections\n\nclass Solution:\n    def sequentialDigits(self, low, high):\n        out = []\n        queue = collections.deque(range(1, 10))\n        while queue:\n            elem = queue.popleft()\n            if low <= elem <= high:\n                out.append(elem)\n            last = elem % 10\n            if last < 9:\n                queue.append(elem * 10 + last + 1)\n        return out",
+          "validation_passed": true,
+          "validation_error_type": "",
+          "validation_output": "2 example tests passed",
+          "prompt_tokens": 387,
+          "completion_tokens": 2048,
+          "total_tokens": 2435,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 387,
+      "completion_tokens": 2048,
+      "total_tokens": 2435
+    },
+    {
+      "task_id": "check-if-string-is-transformable-with-substring-sort-operations_python3",
+      "status": "repair_success",
+      "attempts": 1,
+      "final_level": "TAC",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_success"
+      ],
+      "candidate_patch": "import collections\n\nclass Solution:\n    def isTransformable(self, s: str, t: str) -> bool:\n        indexes = collections.defaultdict(collections.deque)\n        for index, character in enumerate(s):\n            indexes[int(character)].append(index)\n        unique_t_values = set([int(t_i) for t_i in t])\n        for t_v in unique_t_values:\n            if t_v not in indexes:\n                return False\n        for character in t:\n            character_designation = int(character)\n            if character_designation not in indexes:\n                return False\n            for lesser_character in range(character_designation):\n                if indexes[lesser_character] and indexes[lesser_character][0] < indexes[character_designation][0]:\n                    return False\n            indexes[character_designation].popleft()\n            if len(indexes[character_designation]) == 0:\n                indexes.pop(character_designation)\n        return True",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "import collections\n\nclass Solution:\n    def isTransformable(self, s: str, t: str) -> bool:\n        indexes = collections.defaultdict(collections.deque)\n        for index, character in enumerate(s):\n            indexes[int(character)].append(index)\n        unique_t_values = set([int(t_i) for t_i in t])\n        for t_v in unique_t_values:\n            if t_v not in indexes:\n                return False\n        for character in t:\n            character_designation = int(character)\n            if character_designation not in indexes:\n                return False\n            for lesser_character in range(character_designation):\n                if indexes[lesser_character] and indexes[lesser_character][0] < indexes[character_designation][0]:\n                    return False\n            indexes[character_designation].popleft()\n            if len(indexes[character_designation]) == 0:\n                indexes.pop(character_designation)\n        return True",
+          "validation_passed": true,
+          "validation_error_type": "",
+          "validation_output": "3 example tests passed",
+          "prompt_tokens": 617,
+          "completion_tokens": 2048,
+          "total_tokens": 2665,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 617,
+      "completion_tokens": 2048,
+      "total_tokens": 2665
+    },
+    {
+      "task_id": "increasing-order-search-tree_python3",
+      "status": "repair_success",
+      "attempts": 1,
+      "final_level": "TAC",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_success"
+      ],
+      "candidate_patch": "class Solution:\n    def increasingBST(self, root: TreeNode) -> TreeNode:\n        newRoot = TreeNode(0)\n        self.temp = newRoot\n        def inorder(root):\n            if root is None: return None\n            inorder(root.left)\n            new = TreeNode(root.val)\n            self.temp.right = new\n            self.temp = self.temp.right\n            inorder(root.right)\n        inorder(root)\n        return newRoot.right",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "class Solution:\n    def increasingBST(self, root: TreeNode) -> TreeNode:\n        newRoot = TreeNode(0)\n        self.temp = newRoot\n        def inorder(root):\n            if root is None: return None\n            inorder(root.left)\n            new = TreeNode(root.val)\n            self.temp.right = new\n            self.temp = self.temp.right\n            inorder(root.right)\n        inorder(root)\n        return newRoot.right",
+          "validation_passed": true,
+          "validation_error_type": "",
+          "validation_output": "2 example tests passed",
+          "prompt_tokens": 403,
+          "completion_tokens": 1588,
+          "total_tokens": 1991,
+          "finish_reason": "stop"
+        }
+      ],
+      "prompt_tokens": 403,
+      "completion_tokens": 1588,
+      "total_tokens": 1991
+    },
+    {
+      "task_id": "check-if-one-string-swap-can-make-strings-equal_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:WrongAnswer",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "We are given a buggy code and we must fix it.\n The bug: The statement `if s1==s2: return True` is inside the previous if (which checks for length) but it's indented under the if (so it's only executed when the length is not equal? Actually, the code has a problem in the structure).\n\n Let's look at the code:\n\n    if len(s1)!=len(s2):\n        return False\n        if s1==s2:   <--- This is a problem: the next line is not indented correctly? Actually, the code has two consecutive statements without a colon for the next if? \n\n Actually, the code as written:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error? Because after a return, the next line is not part of the if block? \n\n But note: the code has a newline and then the next line is an if statement without being indented? Actually, the code is:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is not indented? Actually, in the provided code, the next line is written as a separate line without being part of the if block? \n\n However, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's misplaced.\n\n Let me re-read the problem: \n   \"The statement checking if s1 is equal to s2 is inside the previous if statement.\"\n\n The code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a problem because it's not indented as part of the if block? Actually, the code has two consecutive statements without a newline? \n\n But in the provided code, the next line after `return False` is written as a new line and then `if s1==s2:`. That would be a syntax error because after a return, the next line is not part of the block.\n\n Actually, the code is:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error: the next line is not indented? \n\n How the code is written in the problem:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The intended logic is:\n   - If the lengths are different, return False.\n   - Else, if s1 equals s2, return True.\n\n But the code has the `if s1==s2` outside the block of the first if? Actually, the code as written has the `if s1==s2` at the same indentation level as the `return False`? \n\n Let me write the code as given:\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1)!=len(s2):\n                return False\n                if s1==s2:   # This line is not indented? Actually, in the problem it's written as a new line without being part of the block? \n                    return True\n\n This is invalid because after a return, the next line is not part of the block. The problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's intended to be inside the block of the first if? But it's not.\n\n Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's misplaced? \n\n How it should be:\n\n    if len(s1) != len(s2):\n        return False\n    if s1 == s2:\n        return True\n\n But the code has the `if s1==s2` as a separate block? \n\n Alternatively, the problem might mean that the `if s1==s2` is written inside the block of the first if? But then it's after a return, so it's not executed.\n\n The bug: The code has two consecutive statements without a newline? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's intended to be inside the first if block? But it's written as a separate line without being indented? \n\n Let me look at the provided code:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The intended fix: \n   We want to check if the lengths are equal. If not, return False.\n   Then, if the strings are equal, return True.\n\n But the code also has a loop that collects differences. The problem says: \n   \"The statement checking if s1 is equal to s2 is inside the previous if statement.\"\n\n So the fix is to move the `if s1==s2` to be outside the first if? Actually, no: the first if is for length. We want to check the length first, then if they are equal.\n\n However, the code as written has the `if s1==s2` inside the block of the first if? But that block only has `return False` and then the next line (the if) is not part of the block? \n\n How about we restructure:\n\n   Step 1: Check if the lengths are different -> return False.\n   Step 2: Check if s1 == s2 -> return True.\n\n But the problem says: the bug is that the `if s1==s2` is inside the previous if (the length check) but it's not supposed to be? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's written in the wrong place.\n\n The current code has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error because it's not indented as part of the block? \n\n Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's intended to be inside the block of the first if? But then it's after a return, so it's never executed? \n\n The intended logic for the problem (from the examples) is:\n   - If the two strings are already equal, return True.\n   - Else, if the two strings have exactly two differences and the two differences are swaps (i.e., the first difference is the reverse of the last difference), then return True.\n\n But the current code does:\n   - If the lengths are different -> False.\n   - Then, it has an if statement that is not part of the block? \n\n Let me write the code as it should be:\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1) != len(s2):\n                return False\n            # Now we know they have the same length\n            if s1 == s2:\n                return True\n            diff = []\n            for i in range(len(s1)):\n                if s1[i] != s2[i]:\n                    diff.append([s1[i], s2[i]])\n            # We expect exactly two differences and the two differences are reverses of each other?\n            if len(diff) == 2 and diff[0][0] == diff[1][1] and diff[0][1] == diff[1][0]:\n                return True\n            return False\n\n However, the problem says: the bug is that the `if s1==s2` is inside the previous if (the length check). So we must move it outside the block of the length check? \n\n But note: the code as written has the `if s1==s2` as a separate line without being indented as part of the block? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's written inside the block of the first if? \n\n How the code is written in the problem:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The fix: \n   We should have:\n\n        if len(s1) != len(s2):\n            return False\n        if s1 == s2:\n            return True\n\n But the problem says: the bug is that the `if s1==s2` is inside the previous if. So we move it outside.\n\n However, the problem also says: \"Pruning level: CDS\" meaning we",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "We are given a buggy code and we must fix it.\n The bug: The statement `if s1==s2: return True` is inside the previous if (which checks for length) but it's indented under the if (so it's only executed when the length is not equal? Actually, the code has a problem in the structure).\n\n Let's look at the code:\n\n    if len(s1)!=len(s2):\n        return False\n        if s1==s2:   <--- This is a problem: the next line is not indented correctly? Actually, the code as written has two statements in the same block without proper indentation.\n\n The current code has:\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is at the same level as the return False? But note: the next line is not indented. Actually, the code as written has the `if s1==s2` at the same indentation level as the `return False`? That would be a syntax error.\n\n However, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's misplaced.\n\n Let me re-read: The bug explanation says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's inside the if (len(s1)!=len(s2)) block? But that doesn't make sense because if the lengths are not equal, we return False and then we don't want to check s1==s2.\n\n Actually, the code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This line is at the same indentation as the return False? Then it's a syntax error? But the problem says it's a bug.\n\n Alternatively, the intended logic might be:\n\n   if the lengths are not equal -> return False\n   else if s1 == s2 -> return True\n   else ... \n\n But the current code has the `if s1==s2` at the same level as the `return False` (so it's inside the if block for length) but without being indented as a block? Actually, the code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a problem: it's not indented as a block? Actually, in Python, the next line must be indented to be in the block.\n\n The problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's inside the if (len(s1)!=len(s2)) block? But that's not what we want.\n\n Let me write the code as given (with the bug):\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1)!=len(s2):\n                return False\n                if s1==s2:   # This line is not indented? Actually, in the code above, the next line is written without indentation? But in the problem, it's written as:\n                    return True\n\n This is invalid because after a return statement, the next statement is not allowed (it's a syntax error). So the code as written is broken.\n\n How to fix?\n\n The intended logic (from the examples) is:\n   - If the two strings are of different lengths, return False.\n   - If the two strings are already equal, return True.\n   - Otherwise, we want to check if there is exactly one swap that makes them equal.\n\n But note: the problem says \"check if one string swap can make the strings equal\". So we are allowed to swap two characters (exactly one swap).\n\n Steps:\n   1. If the lengths are different -> False.\n   2. If the strings are equal -> True.\n   3. Else, we count the differences. There should be exactly two differences and the two differences should be such that swapping them would fix the string.\n\n However, the current code does:\n      diff = []\n      for i in range(len(s1)):\n          if s1[i]!=s2[i]:\n              diff.append([s1[i], s2[i]])\n\n      if len(diff)==2 and diff[0]==diff[-1][::-1]:\n          return True\n      else:\n          return False\n\n But note: the condition `diff[0]==diff[-1][::-1]` is a bit odd.\n\n Let's break down:\n\n   Example: s1 = \"bank\", s2 = \"kanb\"\n      s1: b a n k\n      s2: k a n b\n\n      Differences at index0: 'b' vs 'k' -> ['b','k']\n      Differences at index3: 'k' vs 'b' -> ['k','b']\n\n      Then diff = [['b','k'], ['k','b']]\n\n      Now, diff[0] = ['b','k'] and diff[-1] = ['k','b'] -> reversed of diff[-1] is ['b','k']? \n          Actually, diff[-1][::-1] would be ['b','k']? \n          But note: the list ['k','b'] reversed is ['b','k'].\n\n      So condition: diff[0] == ['b','k'] and diff[-1][::-1] == ['b','k'] -> so they are equal.\n\n      Therefore, condition holds.\n\n However, what if we have more than two differences? The code only checks for two.\n\n But the problem says: one swap. So we must have exactly two differences and they must be the same pair in reverse.\n\n But note: the condition `diff[0]==diff[-1][::-1]` is not exactly what we want.\n\n Let me write the condition we want:\n\n   We want: \n        diff[0][0] == diff[1][1] and diff[0][1] == diff[1][0]\n\n   Alternatively, we can check: \n        diff[0] = [a, b] and diff[1] = [b, a] -> then swapping the two differences would fix.\n\n   So the condition: \n        diff[0][0] == diff[1][1] and diff[0][1] == diff[1][0]\n\n   But note: the code does: \n        if len(diff)==2 and diff[0]==diff[-1][::-1]\n\n   What is diff[-1][::-1]? \n        diff[-1] is the last element: [x,y] -> [x,y][::-1] is [y,x]\n\n   So condition: diff[0] == [y,x] (which is the reverse of the last element)\n\n   But in the example: \n        diff[0] = ['b','k'] -> [b,k]\n        diff[-1] = ['k','b'] -> reversed is ['b','k'] -> so [b,k] == [b,k] -> True.\n\n   So it works for the example.\n\n However, the problem is the initial code structure.\n\n The bug: the line `if s1==s2: return True` is placed inside the if (len(s1)!=len(s2)) block? But that's not what we want.\n\n Actually, the code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error because after a return, we cannot have another statement at the same level.\n\n How to fix the structure?\n\n We want:\n\n   if len(s1) != len(s2):\n        return False\n   if s1 == s2:\n        return True\n\n   Then the rest.\n\n But the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's currently inside the if (len(s1)!=len(s2)) block? \n\n In the provided code, the `if s1==s2` is written at the same indentation level as the `return False` (so it's inside the if block for length) but without being part of a block? Actually, the code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error because the next line (return True) is not indented? \n\n But the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's inside the if (len(s1)!=len(s2)) block? \n\n However, the intended logic is: if the lengths are not equal, return False. Otherwise, check if they are equal.\n\n So the fix is to move the `if s1==s2` outside the length check.\n\n Proposed fix:\n\n   Step 1: Check length -> if not equal, return False.\n   Step 2: Check if s1 == s2 -> if yes, return True.\n   Step 3: Then collect the differences.\n\n But note: the problem says the code has a bug: the `if s1==s2` is inside the previous if (the length one). So we move it out.\n\n Let me rewrite the code:\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1) != len(s2):\n                return False\n            if s1 == s2:\n                return True\n            diff = []\n            for i in range(len(s1)):\n                if s1[i] != s2[i]:\n                    diff.append([s1[i], s2[i]])\n            if len(diff) == 2 and diff",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': \"unmatched ')' (<string>, line 2)\", 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 2\\n    The bug: The statement `if s1==s2: return True` is inside the previous if (which checks for length) but it\\'s indented under the if (so it\\'s only executed when the length is not equal? Actually, the code has a problem in the structure).\\n                                                                                                                                                                                                                                             ^\\nSyntaxError: unmatched \\')\\'\\n'}",
+          "prompt_tokens": 472,
+          "completion_tokens": 2048,
+          "total_tokens": 2520,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "class Solution:\n    def areAlmostEqual(self, s1: str, s2: str) -> bool:\n        if len(s1) != len(s2):\n            return False\n        diff = []",
+          "validation_passed": false,
+          "validation_error_type": "WrongAnswer",
+          "validation_output": "example_1: {'status': 'WrongAnswer', 'expected': True, 'actual': None}",
+          "prompt_tokens": 438,
+          "completion_tokens": 2048,
+          "total_tokens": 2486,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "We are given a buggy code and we must fix it.\n The bug: The statement `if s1==s2: return True` is inside the previous if (which checks for length) but it's indented under the if (so it's only executed when the length is not equal? Actually, the code has a problem in the structure).\n\n Let's look at the code:\n\n    if len(s1)!=len(s2):\n        return False\n        if s1==s2:   <--- This is a problem: the next line is not indented correctly? Actually, the code has two consecutive statements without a colon for the next if? \n\n Actually, the code as written:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error? Because after a return, the next line is not part of the if block? \n\n But note: the code has a newline and then the next line is an if statement without being indented? Actually, the code is:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is not indented? Actually, in the provided code, the next line is written as a separate line without being part of the if block? \n\n However, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's misplaced.\n\n Let me re-read the problem: \n   \"The statement checking if s1 is equal to s2 is inside the previous if statement.\"\n\n The code as written has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a problem because it's not indented as part of the if block? Actually, the code has two consecutive statements without a newline? \n\n But in the provided code, the next line after `return False` is written as a new line and then `if s1==s2:`. That would be a syntax error because after a return, the next line is not part of the block.\n\n Actually, the code is:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error: the next line is not indented? \n\n How the code is written in the problem:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The intended logic is:\n   - If the lengths are different, return False.\n   - Else, if s1 equals s2, return True.\n\n But the code has the `if s1==s2` outside the block of the first if? Actually, the code as written has the `if s1==s2` at the same indentation level as the `return False`? \n\n Let me write the code as given:\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1)!=len(s2):\n                return False\n                if s1==s2:   # This line is not indented? Actually, in the problem it's written as a new line without being part of the block? \n                    return True\n\n This is invalid because after a return, the next line is not part of the block. The problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's intended to be inside the block of the first if? But it's not.\n\n Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's misplaced? \n\n How it should be:\n\n    if len(s1) != len(s2):\n        return False\n    if s1 == s2:\n        return True\n\n But the code has the `if s1==s2` as a separate block? \n\n Alternatively, the problem might mean that the `if s1==s2` is written inside the block of the first if? But then it's after a return, so it's not executed.\n\n The bug: The code has two consecutive statements without a newline? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's intended to be inside the first if block? But it's written as a separate line without being indented? \n\n Let me look at the provided code:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The intended fix: \n   We want to check if the lengths are equal. If not, return False.\n   Then, if the strings are equal, return True.\n\n But the code also has a loop that collects differences. The problem says: \n   \"The statement checking if s1 is equal to s2 is inside the previous if statement.\"\n\n So the fix is to move the `if s1==s2` to be outside the first if? Actually, no: the first if is for length. We want to check the length first, then if they are equal.\n\n However, the code as written has the `if s1==s2` inside the block of the first if? But that block only has `return False` and then the next line (the if) is not part of the block? \n\n How about we restructure:\n\n   Step 1: Check if the lengths are different -> return False.\n   Step 2: Check if s1 == s2 -> return True.\n\n But the problem says: the bug is that the `if s1==s2` is inside the previous if (the length check) but it's not supposed to be? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's written in the wrong place.\n\n The current code has:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:   # This is a syntax error because it's not indented as part of the block? \n\n Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" -> meaning it's intended to be inside the block of the first if? But then it's after a return, so it's never executed? \n\n The intended logic for the problem (from the examples) is:\n   - If the two strings are already equal, return True.\n   - Else, if the two strings have exactly two differences and the two differences are swaps (i.e., the first difference is the reverse of the last difference), then return True.\n\n But the current code does:\n   - If the lengths are different -> False.\n   - Then, it has an if statement that is not part of the block? \n\n Let me write the code as it should be:\n\n    class Solution:\n        def areAlmostEqual(self, s1: str, s2: str) -> bool:\n            if len(s1) != len(s2):\n                return False\n            # Now we know they have the same length\n            if s1 == s2:\n                return True\n            diff = []\n            for i in range(len(s1)):\n                if s1[i] != s2[i]:\n                    diff.append([s1[i], s2[i]])\n            # We expect exactly two differences and the two differences are reverses of each other?\n            if len(diff) == 2 and diff[0][0] == diff[1][1] and diff[0][1] == diff[1][0]:\n                return True\n            return False\n\n However, the problem says: the bug is that the `if s1==s2` is inside the previous if (the length check). So we must move it outside the block of the length check? \n\n But note: the code as written has the `if s1==s2` as a separate line without being indented as part of the block? Actually, the problem says: \"The statement checking if s1 is equal to s2 is inside the previous if statement.\" meaning it's written inside the block of the first if? \n\n How the code is written in the problem:\n\n        if len(s1)!=len(s2):\n            return False\n            if s1==s2:\n                return True\n\n This is invalid because the `if s1==s2` is not indented as part of the block of the first if? Actually, the first if block has two statements: \n   - return False\n   - then an if statement (which is not indented as part of the block) -> that would be a syntax error.\n\n The fix: \n   We should have:\n\n        if len(s1) != len(s2):\n            return False\n        if s1 == s2:\n            return True\n\n But the problem says: the bug is that the `if s1==s2` is inside the previous if. So we move it outside.\n\n However, the problem also says: \"Pruning level: CDS\" meaning we",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': \"unmatched ')' (<string>, line 2)\", 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 2\\n    The bug: The statement `if s1==s2: return True` is inside the previous if (which checks for length) but it\\'s indented under the if (so it\\'s only executed when the length is not equal? Actually, the code has a problem in the structure).\\n                                                                                                                                                                                                                                             ^\\nSyntaxError: unmatched \\')\\'\\n'}",
+          "prompt_tokens": 472,
+          "completion_tokens": 2048,
+          "total_tokens": 2520,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 1382,
+      "completion_tokens": 6144,
+      "total_tokens": 7526
+    },
+    {
+      "task_id": "disconnect-path-in-a-binary-matrix-by-at-most-one-flip_python3",
+      "status": "repair_fail",
+      "attempts": 3,
+      "final_level": "CDS",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "escalate_to:PSS",
+        "semantic_pruning:PSS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:NameError",
+        "escalate_to:CDS",
+        "semantic_pruning:CDS",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_failed:SyntaxError",
+        "max_context_reached"
+      ],
+      "candidate_patch": "We are given a buggy code and we must fix it. The bug explanation says: \"The for-loop after grid[i][j] = 2 under dfs method is wrongly indented outside dfs.\"",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "We are given a buggy code and we must fix it. The bug explanation says: \"The for-loop after grid[i][j] = 2 under dfs method is wrongly indented outside dfs.\"",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'invalid syntax (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    We are given a buggy code and we must fix it. The bug explanation says: \"The for-loop after grid[i][j] = 2 under dfs method is wrongly indented outside dfs.\"\\n       ^^^\\nSyntaxError: invalid syntax\\n'}",
+          "prompt_tokens": 728,
+          "completion_tokens": 2048,
+          "total_tokens": 2776,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 2,
+          "level": "PSS",
+          "candidate_patch": "def dfs(i: int, j: int) -> None:\n        for di, dj in dirs:\n            if 0 <= i + di < m and 0 <= j + dj < n and grid[i + di][j + dj] == 1: dfs(i + di, j + dj)",
+          "validation_passed": false,
+          "validation_error_type": "NameError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'NameError', 'message': \"Entry point function 'isPossibleToCutPath' not found in the generated patch.\"}",
+          "prompt_tokens": 593,
+          "completion_tokens": 2048,
+          "total_tokens": 2641,
+          "finish_reason": "length"
+        },
+        {
+          "attempt": 3,
+          "level": "CDS",
+          "candidate_patch": "We are given a buggy code and we must fix it. The bug explanation says: \"The for-loop after grid[i][j] = 2 under dfs method is wrongly indented outside dfs.\"",
+          "validation_passed": false,
+          "validation_error_type": "SyntaxError",
+          "validation_output": "example_1: {'status': 'RuntimeError', 'error_type': 'SyntaxError', 'message': 'invalid syntax (<string>, line 1)', 'traceback': 'Traceback (most recent call last):\\n  File \"/home/bangjiy2/code/Ada-MSS/src/ada_mss/sandbox_evaluator.py\", line 245, in worker_process\\n    exec(patched_code, local_env, local_env)\\n  File \"<string>\", line 1\\n    We are given a buggy code and we must fix it. The bug explanation says: \"The for-loop after grid[i][j] = 2 under dfs method is wrongly indented outside dfs.\"\\n       ^^^\\nSyntaxError: invalid syntax\\n'}",
+          "prompt_tokens": 728,
+          "completion_tokens": 2048,
+          "total_tokens": 2776,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 2049,
+      "completion_tokens": 6144,
+      "total_tokens": 8193
+    },
+    {
+      "task_id": "smallest-string-starting-from-leaf_python3",
+      "status": "repair_success",
+      "attempts": 1,
+      "final_level": "TAC",
+      "provider": "local_qwen",
+      "model": "local_qwen",
+      "trace": [
+        "semantic_pruning:TAC",
+        "llm_repair_agent",
+        "validation_sandbox",
+        "repair_success"
+      ],
+      "candidate_patch": "class Solution:\n    def smallestFromLeaf(self, root: Optional[TreeNode]) -> str:\n        self.result = \"\\u017DZZZZZZZZZZZZZZZ\"\n    \n        def isLeaf(node):\n            if node:\n                return (not node.left) and (not node.right)\n            return False\n        \n        def traversar(path, node):\n            if not node:\n                return\n            \n            path += chr(ord('a') + node.val)\n            \n            if isLeaf(node) and path[::-1] < self.result:\n                self.result = path[::-1]\n                return\n            \n            traversar(path, node.left)\n            traversar(path, node.right)\n\n        traversar(\"\", root)\n\n        return self.result",
+      "attempt_logs": [
+        {
+          "attempt": 1,
+          "level": "TAC",
+          "candidate_patch": "class Solution:\n    def smallestFromLeaf(self, root: Optional[TreeNode]) -> str:\n        self.result = \"\\u017DZZZZZZZZZZZZZZZ\"\n    \n        def isLeaf(node):\n            if node:\n                return (not node.left) and (not node.right)\n            return False\n        \n        def traversar(path, node):\n            if not node:\n                return\n            \n            path += chr(ord('a') + node.val)\n            \n            if isLeaf(node) and path[::-1] < self.result:\n                self.result = path[::-1]\n                return\n            \n            traversar(path, node.left)\n            traversar(path, node.right)\n\n        traversar(\"\", root)\n\n        return self.result",
+          "validation_passed": true,
+          "validation_error_type": "",
+          "validation_output": "3 example tests passed",
+          "prompt_tokens": 450,
+          "completion_tokens": 2048,
+          "total_tokens": 2498,
+          "finish_reason": "length"
+        }
+      ],
+      "prompt_tokens": 450,
+      "completion_tokens": 2048,
+      "total_tokens": 2498
+    }
+  ],
+  "experiment_mode": "ada_mss",
+  "prompt_tokens": 13674,
+  "completion_tokens": 44463,
+  "total_tokens": 58137,
+  "params": {
+    "config": "configs/default.json",
+    "dataset": "data/processed/debugbench.jsonl",
+    "test_samples": 150,
+    "provider_base_url": "http://127.0.0.1:8030/v1",
+    "provider_model": "local_qwen",
+    "experiment_mode": "ada_mss"
+  }
+}

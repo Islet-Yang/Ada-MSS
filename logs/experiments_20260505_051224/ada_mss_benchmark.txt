@@ -1,0 +1,15 @@
+Total: 10
+Success: 4
+Success rate: 40.00%
+Experiment mode: ada_mss
+Tokens: prompt=13674, completion=44463, total=58137
+- moving-stones-until-consecutive-ii_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=9285
+- largest-number-after-mutating-substring_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=7892
+- nim-game_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=7078
+- find-all-possible-recipes-from-given-supplies_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=8574
+- sequential-digits_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2435
+- check-if-string-is-transformable-with-substring-sort-operations_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2665
+- increasing-order-search-tree_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=1991
+- check-if-one-string-swap-can-make-strings-equal_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=7526
+- disconnect-path-in-a-binary-matrix-by-at-most-one-flip_python3: repair_fail, attempts=3, level=CDS, provider=local_qwen, model=local_qwen, tokens=8193
+- smallest-string-starting-from-leaf_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2498

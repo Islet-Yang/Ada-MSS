@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from dataclasses import dataclass
 import re
 
@@ -20,6 +21,10 @@ class AttemptLog:
     validation_passed: bool
     validation_error_type: str
     validation_output: str
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
+    finish_reason: str = ""
 
 
 @dataclass
@@ -32,6 +37,9 @@ class PipelineResult:
     trace: list[str]
     candidate_patch: str
     attempt_logs: list[AttemptLog]
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
 
 
 class AdaMSSPipeline:
@@ -45,11 +53,61 @@ class AdaMSSPipeline:
         self.escalation = EscalationPolicy(max_context_level=cfg.pipeline.max_context_level)
 
     def _extract_code(self, llm_output: str, fallback: str) -> str:
-        code_block = re.search(r"```(?:python)?\n(.*?)```", llm_output, re.S)
+        text = llm_output.strip()
+        text = re.sub(r"<think>.*?</think>", "", text, flags=re.I | re.S).strip()
+        if "</think>" in text.lower():
+            text = re.split(r"</think>", text, flags=re.I)[-1].strip()
+
+        tagged = re.search(r"<code>\s*(.*?)\s*</code>", text, re.I | re.S)
+        if tagged:
+            text = tagged.group(1).strip()
+
+        code_block = re.search(r"```(?:python)?\s*\n(.*?)```", text, re.S)
         if code_block:
-            return code_block.group(1).strip()
-        stripped = llm_output.strip()
-        return stripped or fallback
+            text = code_block.group(1).strip()
+
+        match = re.search(r"(?m)^(?:from\s+\S+\s+import\s+|import\s+|class\s+|def\s+)", text)
+        if match:
+            text = text[match.start():].strip()
+
+        text = self._trim_after_code(text)
+
+        lines = text.splitlines()
+        for end in range(len(lines), 0, -1):
+            candidate = "\n".join(lines[:end]).strip()
+            if not candidate:
+                continue
+            try:
+                ast.parse(candidate)
+                return candidate
+            except SyntaxError:
+                continue
+
+        return text or fallback
+
+    def _trim_after_code(self, text: str) -> str:
+        lines = text.splitlines()
+        if not lines:
+            return text
+        kept: list[str] = []
+        for idx, line in enumerate(lines):
+            stripped = line.strip()
+            if (
+                idx > 0
+                and line == stripped
+                and stripped
+                and not stripped.startswith((
+                    "import ",
+                    "from ",
+                    "class ",
+                    "def ",
+                    "@",
+                    "#",
+                ))
+            ):
+                break
+            kept.append(line)
+        return "\n".join(kept).strip()
 
     def _template_repair(self, task: RepairTask) -> str:
         code = task.buggy_code
@@ -86,12 +144,14 @@ class AdaMSSPipeline:
             try:
                 if agent is None:
                     raise RuntimeError("llm_agent_not_ready")
-                llm_output = agent.propose_patch(context)
-                candidate_code = self._extract_code(llm_output, task.buggy_code)
+                llm_response = agent.propose_patch(context)
+                candidate_code = self._extract_code(llm_response.content, task.buggy_code)
             except Exception as e:
                 if self.cfg.pipeline.fallback_to_template:
-                    trace.append(f"llm_unavailable_template_patch:{type(e).__name__}")
+                    message = str(e).replace("\n", " ")[:200]
+                    trace.append(f"llm_unavailable_template_patch:{type(e).__name__}:{message}")
                     candidate_code = self._template_repair(task)
+                    llm_response = None
                 else:
                     raise
 
@@ -105,6 +165,10 @@ class AdaMSSPipeline:
                     validation_passed=val.passed,
                     validation_error_type=val.error_type,
                     validation_output=val.output,
+                    prompt_tokens=llm_response.prompt_tokens if llm_response else 0,
+                    completion_tokens=llm_response.completion_tokens if llm_response else 0,
+                    total_tokens=llm_response.total_tokens if llm_response else 0,
+                    finish_reason=llm_response.finish_reason if llm_response else "",
                 )
             )
 
@@ -119,6 +183,9 @@ class AdaMSSPipeline:
                     trace=trace,
                     candidate_patch=candidate_code,
                     attempt_logs=attempt_logs,
+                    prompt_tokens=sum(step.prompt_tokens for step in attempt_logs),
+                    completion_tokens=sum(step.completion_tokens for step in attempt_logs),
+                    total_tokens=sum(step.total_tokens for step in attempt_logs),
                 )
 
             trace.append(f"repair_failed:{val.error_type}")
@@ -134,6 +201,9 @@ class AdaMSSPipeline:
                     trace=trace,
                     candidate_patch=candidate_code,
                     attempt_logs=attempt_logs,
+                    prompt_tokens=sum(step.prompt_tokens for step in attempt_logs),
+                    completion_tokens=sum(step.completion_tokens for step in attempt_logs),
+                    total_tokens=sum(step.total_tokens for step in attempt_logs),
                 )
             level = nxt
             trace.append(f"escalate_to:{level}")
@@ -148,4 +218,7 @@ class AdaMSSPipeline:
             trace=trace,
             candidate_patch=candidate_code,
             attempt_logs=attempt_logs,
+            prompt_tokens=sum(step.prompt_tokens for step in attempt_logs),
+            completion_tokens=sum(step.completion_tokens for step in attempt_logs),
+            total_tokens=sum(step.total_tokens for step in attempt_logs),
         )

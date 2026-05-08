@@ -21,7 +21,8 @@ def convert_debugbench(output_path: str, language: str = "python3", max_samples:
     from datasets import load_dataset
     
     print(f"Loading DebugBench dataset...")
-    ds = load_dataset("Rtian/DebugBench")
+    # ds = load_dataset("Rtian/DebugBench")
+    ds = load_dataset("/models/models/islet/data/Rtian___debug_bench/default/0.0.0/f474dcd2ad9276dfb48f96670f830da694870447")
     
     # Get the test split
     data = ds["test"]

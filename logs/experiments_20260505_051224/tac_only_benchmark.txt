@@ -1,0 +1,15 @@
+Total: 10
+Success: 4
+Success rate: 40.00%
+Experiment mode: tac_only
+Tokens: prompt=6033, completion=20020, total=26053
+- moving-stones-until-consecutive-ii_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=3225
+- largest-number-after-mutating-substring_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2647
+- nim-game_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2407
+- find-all-possible-recipes-from-given-supplies_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2889
+- sequential-digits_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2435
+- check-if-string-is-transformable-with-substring-sort-operations_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2665
+- increasing-order-search-tree_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=1991
+- check-if-one-string-swap-can-make-strings-equal_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2520
+- disconnect-path-in-a-binary-matrix-by-at-most-one-flip_python3: repair_fail, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2776
+- smallest-string-starting-from-leaf_python3: repair_success, attempts=1, level=TAC, provider=local_qwen, model=local_qwen, tokens=2498

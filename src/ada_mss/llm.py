@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
 import os
-from urllib import error, request
+from urllib import error, parse, request
 
 from .config import ProviderConfig
 
@@ -14,6 +14,10 @@ class LLMResponse:
     provider: str
     model: str
     content: str
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
+    finish_reason: str = ""
 
 
 class OpenAICompatClient:
@@ -38,6 +42,20 @@ class OpenAICompatClient:
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+    def _open(self, req: request.Request, timeout: float):
+        host = parse.urlparse(req.full_url).hostname or ""
+        if host in {"127.0.0.1", "localhost", "::1"}:
+            opener = request.build_opener(request.ProxyHandler({}))
+            return opener.open(req, timeout=timeout)
+        return request.urlopen(req, timeout=timeout)
+
+    def _max_tokens(self) -> int:
+        raw = os.getenv("ADA_MSS_MAX_TOKENS", "2048")
+        try:
+            return max(256, int(raw))
+        except ValueError:
+            return 2048
+
     def generate(self, prompt: str, system_prompt: str) -> LLMResponse:
         payload = {
             "model": self.config.model,
@@ -46,7 +64,8 @@ class OpenAICompatClient:
                 {"role": "user", "content": prompt},
             ],
             "temperature": 0.0,
-            "max_tokens": 512,
+            "top_p": 1.0,
+            "max_tokens": self._max_tokens(),
             "chat_template_kwargs": {
                 "enable_thinking": False
             }
@@ -62,7 +81,7 @@ class OpenAICompatClient:
 
         started_at = datetime.now(timezone.utc).isoformat()
         try:
-            with request.urlopen(req, timeout=60) as resp:
+            with self._open(req, timeout=60) as resp:
                 body = json.loads(resp.read().decode("utf-8"))
         except error.HTTPError as e:
             err_body = e.read().decode("utf-8", errors="replace")
@@ -78,8 +97,23 @@ class OpenAICompatClient:
                 }
             )
             raise
+        except Exception as e:
+            self._append_debug_log(
+                {
+                    "time": started_at,
+                    "provider": self.config.name,
+                    "model": self.config.model,
+                    "url": url,
+                    "request": payload,
+                    "error_type": type(e).__name__,
+                    "error": str(e),
+                }
+            )
+            raise
 
-        content = body["choices"][0]["message"]["content"]
+        choice = body["choices"][0]
+        content = choice["message"]["content"]
+        usage = body.get("usage") or {}
         self._append_debug_log(
             {
                 "time": started_at,
@@ -90,4 +124,12 @@ class OpenAICompatClient:
                 "response": body,
             }
         )
-        return LLMResponse(provider=self.config.name, model=self.config.model, content=content)
+        return LLMResponse(
+            provider=self.config.name,
+            model=self.config.model,
+            content=content,
+            prompt_tokens=int(usage.get("prompt_tokens") or 0),
+            completion_tokens=int(usage.get("completion_tokens") or 0),
+            total_tokens=int(usage.get("total_tokens") or 0),
+            finish_reason=choice.get("finish_reason") or "",
+        )
